@@ -51,8 +51,6 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
     Button next;
     String phone_;
 
-    FragmentManager fm;
-    FragmentTransaction ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -84,6 +84,8 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
                         //인증 다됐을경우
                         Intent intent=new Intent(getApplicationContext(),Sign_2_sms_Activity.class);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
 
                     }else{
                     }
