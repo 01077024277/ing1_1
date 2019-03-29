@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.pc.ing1_.R;
 import com.example.pc.ing1_.RetrofitExService;
 import com.example.pc.ing1_.Sign.Sign_1_agree_Activity;
+import com.example.pc.ing1_.Sign.Sing_3_userinfo_Activity;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -137,7 +138,8 @@ public class Login_Activity extends AppCompatActivity {
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),Sign_1_agree_Activity.class);
+//                Intent intent = new Intent(getApplicationContext(),Sign_1_agree_Activity.class);
+                Intent intent = new Intent(getApplicationContext(),Sing_3_userinfo_Activity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }

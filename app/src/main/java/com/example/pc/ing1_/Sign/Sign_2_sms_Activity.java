@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
@@ -222,7 +220,12 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
                         else{
                             phone.getBackground().clearColorFilter();
                             Toast.makeText(getApplicationContext(),"가입가능",Toast.LENGTH_SHORT).show();
+                            Intent intent=new Intent(getApplicationContext(),Sing_3_userinfo_Activity.class);
 
+                            startActivity(intent);
+
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            finish();
 
 
 
@@ -248,20 +251,12 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+    }
 
     //sms 리시버
     private  void SmsReceiver(){

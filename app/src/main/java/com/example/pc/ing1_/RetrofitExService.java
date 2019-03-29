@@ -28,5 +28,9 @@ public interface RetrofitExService {
     @POST("/Sign/Phone_check.php")
     Call<User> phone_check(@Field("phone") String phone);
 
+    @FormUrlEncoded
+    @POST("/Sign/Id_check.php")
+    Call<ResponseBody> id_check(@Field("id") String id);
+
 }
 
