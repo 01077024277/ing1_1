@@ -220,7 +220,8 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
                         else{
                             phone.getBackground().clearColorFilter();
                             Toast.makeText(getApplicationContext(),"가입가능",Toast.LENGTH_SHORT).show();
-                            Intent intent=new Intent(getApplicationContext(),Sing_3_userinfo_Activity.class);
+                            Intent intent=new Intent(getApplicationContext(),Sign_3_id_Activity.class);
+                            intent.putExtra("phone",phone.getText().toString());
 
                             startActivity(intent);
 

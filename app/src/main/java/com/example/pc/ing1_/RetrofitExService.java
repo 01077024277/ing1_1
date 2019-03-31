@@ -1,5 +1,7 @@
 package com.example.pc.ing1_;
 
+import com.example.pc.ing1_.Login.Hash;
+
 import java.util.HashMap;
 
 import okhttp3.ResponseBody;
@@ -31,6 +33,9 @@ public interface RetrofitExService {
     @FormUrlEncoded
     @POST("/Sign/Id_check.php")
     Call<ResponseBody> id_check(@Field("id") String id);
+    @FormUrlEncoded
+    @POST("/Sign/Sign.php")
+    Call<ResponseBody> sign(@FieldMap HashMap<String,String> sign);
 
 }
 

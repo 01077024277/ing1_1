@@ -21,7 +21,8 @@
         </activity>
         <activity android:name=".Sign.Sign_1_agree_Activity" />
         <activity android:name=".Sign.Sign_2_sms_Activity" />
-        <activity android:name=".Sign.Sing_3_userinfo_Activity"></activity>
+        <activity android:name=".Sign.Sign_3_id_Activity"
+            android:windowSoftInputMode="adjustNothing"></activity>
     </application>
 
 </manifest>
