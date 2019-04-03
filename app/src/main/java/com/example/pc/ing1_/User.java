@@ -5,20 +5,21 @@ public class User{
     String phone;
     String social;
     String uid;
-    String email;
+    String id;
     String password;
     String name;
+    String profile;
 
-    public User(int no, String phone, String social, String uid, String email, String password, String name) {
+    public User(int no, String phone, String social, String uid, String id, String password, String name, String profile) {
         this.no = no;
         this.phone = phone;
         this.social = social;
         this.uid = uid;
-        this.email = email;
+        this.id = id;
         this.password = password;
         this.name = name;
+        this.profile = profile;
     }
-
 
     public int getNo() {
         return no;
@@ -52,12 +53,12 @@ public class User{
         this.uid = uid;
     }
 
-    public String getEmail() {
-        return email;
+    public String getId() {
+        return id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getPassword() {
@@ -74,5 +75,13 @@ public class User{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 }

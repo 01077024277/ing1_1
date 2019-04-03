@@ -222,7 +222,7 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"가입가능",Toast.LENGTH_SHORT).show();
                             Intent intent=new Intent(getApplicationContext(),Sign_3_id_Activity.class);
                             intent.putExtra("phone",phone.getText().toString());
-
+                            intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                             startActivity(intent);
 
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -255,6 +255,8 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+//        Intent intent=new Intent(getApplicationContext(),Sign_1_agree_Activity.class);
+//        startActivity(intent);
         finish();
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
     }

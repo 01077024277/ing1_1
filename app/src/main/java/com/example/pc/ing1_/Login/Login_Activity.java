@@ -10,9 +10,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pc.ing1_.Main_Activity;
 import com.example.pc.ing1_.R;
 import com.example.pc.ing1_.RetrofitExService;
+import com.example.pc.ing1_.Sign.Sign_1_agree_Activity;
+import com.example.pc.ing1_.Sign.Sign_2_sms_Activity;
 import com.example.pc.ing1_.Sign.Sign_3_id_Activity;
+import com.example.pc.ing1_.Sign.Sign_4_profile;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -73,8 +77,8 @@ public class Login_Activity extends AppCompatActivity {
                         info.put("id", id.getText().toString());
                         info.put("pass", password);
 
-                        final Call<ResponseBody> id = http.login(info);
-                        id.enqueue(new Callback<ResponseBody>() {
+                        final Call<ResponseBody> id_ = http.login(info);
+                        id_.enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                 try {
@@ -86,6 +90,12 @@ public class Login_Activity extends AppCompatActivity {
                                         textView.setText("아이디 혹은 비밀번호가 맞지 않습니다");
                                     } else {
                                         Toast.makeText(getApplicationContext(), "로그인", Toast.LENGTH_SHORT).show();
+                                        Intent intent= new Intent();
+                                        intent.putExtra("id",id.getText().toString());
+                                        setResult(RESULT_OK,intent);
+                                        finish();
+                                        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -137,13 +147,28 @@ public class Login_Activity extends AppCompatActivity {
         sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(),Sign_1_agree_Activity.class);
-                Intent intent = new Intent(getApplicationContext(),Sign_3_id_Activity.class);
+                Intent intent = new Intent(getApplicationContext(),Sign_1_agree_Activity.class);
+//                Intent intent = new Intent(getApplicationContext(),Sign_4_profile.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+
+
+
             }
         });
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        Intent intent=new Intent(getApplicationContext(),Main_Activity.class);
+//        startActivity(intent);
+        finish();
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
 
     }
 }

@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -41,7 +40,7 @@ public class Sign_3_id_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sing_3_id);
+        setContentView(R.layout.sign_3_id);
 
         id_pattern=Pattern.compile("^([a-zA-Z]{1})(?=.*[0-9])(?=.*[A-Za-z])[a-zA-Z0-9]{4,11}$");
         pass_pattern=Pattern.compile("^(?=.*[0-9])(?=.*[A-Za-z])[a-zA-Z0-9]{4,11}$");
@@ -62,9 +61,9 @@ public class Sign_3_id_Activity extends AppCompatActivity {
         passcheck.getBackground().clearColorFilter();
         pass_check=findViewById(R.id.textView8);
         sign=findViewById(R.id.button2);
-        Intent intent=getIntent();
-//        phone=intent.getStringExtra("phone");
-        phone="010770242771";
+        final Intent intent=getIntent();
+        phone=intent.getStringExtra("phone");
+//        phone="010770242771";
 
 
         idcheck.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +204,7 @@ public class Sign_3_id_Activity extends AppCompatActivity {
                     progressDialog.setMessage("잠시만 기다려주세요");
                     progressDialog.show();
                     String password = Hash.getSHA512(pass.getText().toString());
-                    String id_=id.getText().toString();
+                    final String id_=id.getText().toString();
                     HashMap<String,String> user=new HashMap<>();
                     user.put("id",id_);
                     user.put("password",password);
@@ -226,6 +225,13 @@ public class Sign_3_id_Activity extends AppCompatActivity {
                             }
                             if(result.equals("0")){
                                 Toast.makeText(getApplicationContext(),"가입완료",Toast.LENGTH_SHORT).show();
+                                Intent intent1=new Intent(getApplicationContext(),Sign_4_profile.class);
+                                intent1.putExtra("id",id_);
+                                intent1.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                                startActivity(intent1);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                finish();
+
                             }else{
                                 Toast.makeText(getApplicationContext(),"가입불가",Toast.LENGTH_SHORT).show();
                             }

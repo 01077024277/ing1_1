@@ -1,5 +1,6 @@
 package com.example.pc.ing1_.Sign;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.example.pc.ing1_.Login.Login_Activity;
 import com.example.pc.ing1_.R;
 
 public class Sign_1_agree_Activity extends AppCompatActivity {
@@ -20,15 +22,14 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
     FragmentTransaction tran;
     CheckBox c1,c2,c3,c4;
     TextView next;
-
-
+    public static Activity sign_1;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_1_agree);
-
+        sign_1=Sign_1_agree_Activity.this;
             // Inflate the layout for this fragment
 
 
@@ -83,6 +84,7 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
 
                         //인증 다됐을경우
                         Intent intent=new Intent(getApplicationContext(),Sign_2_sms_Activity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
@@ -114,6 +116,15 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         check();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent=new Intent(getApplicationContext(),Login_Activity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+        finish();
     }
 }
 

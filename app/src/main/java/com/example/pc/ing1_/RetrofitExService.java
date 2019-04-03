@@ -4,12 +4,20 @@ import com.example.pc.ing1_.Login.Hash;
 
 import java.util.HashMap;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
+import retrofit2.http.Url;
 
 public interface RetrofitExService {
 
@@ -36,6 +44,22 @@ public interface RetrofitExService {
     @FormUrlEncoded
     @POST("/Sign/Sign.php")
     Call<ResponseBody> sign(@FieldMap HashMap<String,String> sign);
+
+    @Multipart
+    @POST("/profile_img.php")
+//    Call<ResponseBody> upload(@Part MultipartBody.Part img, @Part("name") RequestBody name,@Part("id") RequestBody id);
+    Call<ResponseBody> upload(@Part MultipartBody.Part img,@PartMap HashMap<String,RequestBody> data);
+    @FormUrlEncoded
+    @POST("/nickname.php")
+    Call<ResponseBody> nick(@FieldMap HashMap<String,String> name);
+    @GET
+    Call<ResponseBody> getProfile(@Url String url);
+
+    @FormUrlEncoded
+    @POST("/User/userinfo.php")
+    Call<User>  userinfo(@Field("id") String id);
+
+
 
 }
 
