@@ -49,6 +49,15 @@ public interface RetrofitExService {
     @POST("/profile_img.php")
 //    Call<ResponseBody> upload(@Part MultipartBody.Part img, @Part("name") RequestBody name,@Part("id") RequestBody id);
     Call<ResponseBody> upload(@Part MultipartBody.Part img,@PartMap HashMap<String,RequestBody> data);
+
+    @Multipart
+    @POST("/naver_profile_img.php")
+//    Call<ResponseBody> upload(@Part MultipartBody.Part img, @Part("name") RequestBody name,@Part("id") RequestBody id);
+    Call<ResponseBody> naver_upload(@Part MultipartBody.Part img,@PartMap HashMap<String,RequestBody> data);
+    @Multipart
+    @POST("/kakao_profile_img.php")
+//    Call<ResponseBody> upload(@Part MultipartBody.Part img, @Part("name") RequestBody name,@Part("id") RequestBody id);
+    Call<ResponseBody> kakao_upload(@Part MultipartBody.Part img,@PartMap HashMap<String,RequestBody> data);
     @FormUrlEncoded
     @POST("/nickname.php")
     Call<ResponseBody> nick(@FieldMap HashMap<String,String> name);
@@ -59,7 +68,19 @@ public interface RetrofitExService {
     @POST("/User/userinfo.php")
     Call<User>  userinfo(@Field("id") String id);
 
+    @FormUrlEncoded
+    @POST("/Login/naver_login.php")
+    Call<User> naver_login(@Field("id") String id);
+    @FormUrlEncoded
+    @POST("/Login/kakao_login.php")
+    Call<User> kakao_login(@Field("id") String id);
 
+    @FormUrlEncoded
+    @POST("/Sign/Naver_Sign.php")
+    Call<ResponseBody> Naver_Sign(@FieldMap HashMap<String,String> map);
+    @FormUrlEncoded
+    @POST("/Sign/kakao_sign.php")
+    Call<ResponseBody> Kakao_Sign(@FieldMap HashMap<String,String> map);
 
 }
 

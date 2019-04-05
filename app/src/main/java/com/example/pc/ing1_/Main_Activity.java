@@ -3,6 +3,7 @@ package com.example.pc.ing1_;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.media.ExifInterface;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.pc.ing1_.Login.Login_Activity;
 import com.example.pc.ing1_.Sign.Sign_1_agree_Activity;
 import com.example.pc.ing1_.Sign.Sign_4_profile;
@@ -47,12 +49,13 @@ public class Main_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 RetrofitExService http;
     View header;
-     String id;
+     String id,social;
     ImageView imageView;
-    Button sign_button;
+    Button sign_button,profile_change;
     User login_user;
     DrawerLayout drawer;
     TextView name;
+    Bitmap bmp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,9 +69,11 @@ RetrofitExService http;
         name=header.findViewById(R.id.name);
         imageView =header.findViewById(R.id.profile);
         sign_button=header.findViewById(R.id.sign_button);
+        profile_change=header.findViewById(R.id.profile_change);
 
-        Intent intent=getIntent();
+        final Intent intent=getIntent();
         id=intent.getStringExtra("id");
+        social=intent.getStringExtra("social");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             imageView.setBackground(new ShapeDrawable(new OvalShape()));
@@ -78,9 +83,35 @@ RetrofitExService http;
             imageView.setClipToOutline(true);
         }
 
-        Login();
+//        Login(1);
 
+        sign_button.setVisibility(View.VISIBLE);
+        profile_change.setVisibility(View.GONE);
+        imageView.setVisibility(View.GONE);
 
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(id!=null){
+                    if(!login_user.getProfile().equals("")) {
+                        if(social!=null){
+                            Intent intent1 = new Intent(getApplicationContext(), Profile_View.class);
+                            intent1.putExtra("id", id);
+                            intent1.putExtra("social",social);
+
+                            startActivity(intent1);
+                        }else {
+                            Intent intent1 = new Intent(getApplicationContext(), Profile_View.class);
+                            intent1.putExtra("id", id);
+
+                            startActivity(intent1);
+                        }
+                    }
+                }else {
+
+                }
+            }
+        });
 
 
         sign_button.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +123,23 @@ RetrofitExService http;
                 startActivityForResult(intent,100);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 //                finish();
+            }
+        });
+        profile_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),Sign_4_profile.class);
+                intent.putExtra("id",id);
+                //소셜로그인이라면
+                if(social!=null) {
+                    intent.putExtra("nname", id);
+                    intent.putExtra("social",social);
+                }
+                intent.putExtra("change",1);
+                intent.putExtra("name",login_user.getName());
+                Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                intent.putExtra("image",bitmap);
+                startActivityForResult(intent,100);
             }
         });
     }
@@ -177,10 +225,14 @@ RetrofitExService http;
         header = navigationView.getHeaderView(0);
     }
 
-    public void Login(){
+    public void Login(int i){
+        //로그인이 되었다면
+        final int result;
+        result=i;
         if(id!=null){
             sign_button.setVisibility(View.GONE);
             imageView.setVisibility(View.VISIBLE);
+            profile_change.setVisibility(View.VISIBLE);
             Call<User> user = http.userinfo(id);
             user.enqueue(new Callback<User>() {
                 @Override
@@ -188,23 +240,29 @@ RetrofitExService http;
                     login_user = response.body();
                     name.setText(login_user.getName());
                     Log.d("프로필",login_user.getProfile());
+                    //프로필이 없으면 기본 이미지
                     if (login_user.getProfile().equals("")) {
-                        imageView.setImageResource(R.drawable.ic_user_1);
-                    } else {
-                        http.getProfile(RetrofitExService.url + "/profile/" + id + ".jpg").enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
+                        Glide.with(getApplicationContext()).load(R.drawable.user).into(imageView);
 
-                                // 변환된 이미지 사용
-                                Glide.with(getApplicationContext()).load(bmp).into(imageView);
-                            }
+                    }
+                    //있으면 프로필 이미지
+                    else {
+                        if(result==1) {
+                            http.getProfile(RetrofitExService.url + "/profile/" + id + ".jpg").enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    bmp = BitmapFactory.decodeStream(response.body().byteStream());
 
-                            @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    // 변환된 이미지 사용
+                                    Glide.with(getApplicationContext()).load(bmp).into(imageView);
+                                }
 
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                }
+                            });
+                        }
                     }
                 }
 
@@ -216,6 +274,7 @@ RetrofitExService http;
 
         }else{
             sign_button.setVisibility(View.VISIBLE);
+            profile_change.setVisibility(View.GONE);
             imageView.setVisibility(View.GONE);
 
         }
@@ -226,15 +285,158 @@ RetrofitExService http;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-            if(resultCode==RESULT_OK){
+        Log.e("에러","소셜로그인0");
+        Log.e("에러","q   "+requestCode+"s   "+resultCode);
+        Log.e("에러",data.getStringExtra("id"));
+        if(resultCode==RESULT_OK){
                 if(requestCode==100) {
+                    Log.e("에러","소셜로그인1");
                     Toast.makeText(getApplicationContext(), "성공", Toast.LENGTH_SHORT).show();
                     id=data.getStringExtra("id");
-                    Login();
+                    if(data.getStringExtra("change")==null){
+                        //프로필 이미지가 변경O or 첫 로그인
+                        Log.e("에러","체인지 null ");
+
+                        if(data.getStringExtra("social")==null) {
+                            //일반 로그인
+                            Login(1);
+                            Log.e("에러","소셜 널");
+                        }
+                        else if(data.getStringExtra("social").equals("naver")){
+                            //소셜 로그인
+                            Log.e("에러","체인지 널 소셜네이버");
+                            social="naver";
+                            Social_Login("naver",id,1);
+
+                        }else if(data.getStringExtra("social").equals("kakao")){
+                            Log.e("에러","체인지 널 소셜카카오");
+                            social="kakao";
+                            Social_Login("kakao",id,1);
+                        }
+                    }else{
+                        //프로필이미지 변경  X
+                        if(data.getStringExtra("social")==null) {
+                            Log.e("에러","체인지 널 ㄴㄴ 소셜 널");
+                            //일반 로그인
+                            Login(0);
+                        }else if(data.getStringExtra("social").equals("naver")){
+                            Log.e("에러","체인지 널 ㄴㄴ 네이버");
+                            social="naver";
+                            Social_Login("naver",id,0);
+                        }else if(data.getStringExtra("social").equals("kakao")){
+                            Log.e("에러","체인지 널 ㄴㄴ 카카오");
+
+                            social="kakao";
+                            Social_Login("kakao",id,0);
+                        }
+                    }
+
+
+
                 }
             }
 
 
     }
+    public void Social_Login(String social, final String uid, int i){
+        Log.e("에러","소셜로그인2");
+        if(social.equals("naver")){
+            final int result =i;
+            http.naver_login(uid).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    sign_button.setVisibility(View.GONE);
+                    imageView.setVisibility(View.VISIBLE);
+                    profile_change.setVisibility(View.VISIBLE);
+                    Call<User> user = http.naver_login(id);
+                    user.enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            login_user = response.body();
+                            name.setText(login_user.getName());
+                            Log.d("프로필",login_user.getUid());
+                            //프로필이 없으면 기본 이미지
+                            if (login_user.getProfile().equals("")) {
+                                Glide.with(getApplicationContext()).load(R.drawable.user).into(imageView);
+
+                            }
+                            //있으면 프로필 이미지
+                            else {
+                                if(result==1) {
+                                    http.getProfile(RetrofitExService.url + "/profile/naver_" + id + ".jpg").enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                            bmp = BitmapFactory.decodeStream(response.body().byteStream());
+
+                                            // 변환된 이미지 사용
+                                            Glide.with(getApplicationContext()).load(bmp).into(imageView);
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
+        }else if (social.equals("kakao")){
+            final int result =i;
+            http.kakao_login(uid).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    sign_button.setVisibility(View.GONE);
+                    imageView.setVisibility(View.VISIBLE);
+                    profile_change.setVisibility(View.VISIBLE);
+                    Call<User> user = http.naver_login(id);
+                    login_user = response.body();
+                    name.setText(login_user.getName());
+                    Log.d("프로필",login_user.getUid());
+                    //프로필이 없으면 기본 이미지
+                    if (login_user.getProfile().equals("")) {
+                        Glide.with(getApplicationContext()).load(R.drawable.user).into(imageView);
+
+                    }
+                    //있으면 프로필 이미지
+                    else {
+                        if(result==1) {
+                            http.getProfile(RetrofitExService.url + "/profile/kakao_" + id + ".jpg").enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    bmp = BitmapFactory.decodeStream(response.body().byteStream());
+
+                                    // 변환된 이미지 사용
+                                    Glide.with(getApplicationContext()).load(bmp).into(imageView);
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                }
+                            });
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+
 }

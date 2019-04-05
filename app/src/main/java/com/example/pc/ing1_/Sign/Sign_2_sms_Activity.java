@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pc.ing1_.Login.Hash;
 import com.example.pc.ing1_.R;
 import com.example.pc.ing1_.RetrofitExService;
 import com.example.pc.ing1_.User;
@@ -47,8 +48,7 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
     Retrofit retrofit;
     String auth_num;
     Button next;
-    String phone_;
-
+    String phone_,id,social,name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +57,10 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
 
         retrofit=new Retrofit.Builder().baseUrl(RetrofitExService.url).addConverterFactory(GsonConverterFactory.create()).build();
         http=retrofit.create(RetrofitExService.class);
-
-
+        
+        id=getIntent().getStringExtra("id");
+        social=getIntent().getStringExtra("social");
+        name=getIntent().getStringExtra("name");
 
 
 
@@ -215,13 +217,79 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
                     public void onResponse(Call<User> call, Response<User> response) {
                         User user1=response.body();
                         if(user1.getPhone()!=null){
-                            Toast.makeText(getApplicationContext(),"가입불가능",Toast.LENGTH_SHORT).show();
+                            if(user1.getSocial().equals("")){
+                                Toast.makeText(getApplicationContext(),"앱 회원가입",Toast.LENGTH_SHORT).show();
+
+                            }else if(user1.getSocial().equals("naver")){
+                                Toast.makeText(getApplicationContext(),"네이버 로그인",Toast.LENGTH_SHORT).show();
+
+                            }else{
+                                Toast.makeText(getApplicationContext(),"카카오 로그인",Toast.LENGTH_SHORT).show();
+                            }
                         }
                         else{
                             phone.getBackground().clearColorFilter();
                             Toast.makeText(getApplicationContext(),"가입가능",Toast.LENGTH_SHORT).show();
-                            Intent intent=new Intent(getApplicationContext(),Sign_3_id_Activity.class);
-                            intent.putExtra("phone",phone.getText().toString());
+                            Intent intent = null;
+                            if(social!=null){
+                                if(social.equals("naver")) {
+                                    Toast.makeText(getApplicationContext(),"네이버 로그인",Toast.LENGTH_SHORT).show();
+                                    intent=new Intent(getApplicationContext(),Sign_4_profile.class);
+
+                                    intent.putExtra("social","naver");
+                                    intent.putExtra("id",name);
+                                    intent.putExtra("nname",id);
+                                    intent.putExtra("phone",phone.getText().toString());
+
+                                    HashMap<String,String> hashMap=new HashMap();
+                                    hashMap.put("uid",id);
+                                    hashMap.put("name",name);
+                                    hashMap.put("phone",phone.getText().toString());
+                                    http.Naver_Sign(hashMap).enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                        }
+                                    });
+                                }else if(social.equals("kakao")){
+                                    //여기
+                                    Toast.makeText(getApplicationContext(),"카카오 로그인",Toast.LENGTH_SHORT).show();
+
+                                    intent=new Intent(getApplicationContext(),Sign_4_profile.class);
+
+                                    intent.putExtra("social","kakao");
+                                    intent.putExtra("id",name);
+                                    intent.putExtra("nname",id);
+                                    intent.putExtra("phone",phone.getText().toString());
+
+
+                                    HashMap<String,String> hashMap=new HashMap();
+                                    hashMap.put("uid",id);
+                                    hashMap.put("name",name);
+                                    hashMap.put("phone",phone.getText().toString());
+                                    http.Kakao_Sign(hashMap).enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                            Toast.makeText(getApplicationContext(),t.getMessage()+"",Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    });
+                                }
+                            }else{
+                                intent=new Intent(getApplicationContext(),Sign_3_id_Activity.class);
+                                intent.putExtra("phone",phone.getText().toString());
+                            }
+
                             intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                             startActivity(intent);
 
@@ -254,11 +322,18 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-//        Intent intent=new Intent(getApplicationContext(),Sign_1_agree_Activity.class);
+
+        Intent intent1=new Intent(getApplicationContext(),Sign_1_agree_Activity.class);
 //        startActivity(intent);
+//        Intent intent1=new Intent();
+        intent1.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        intent1.putExtra("qwe","qwe");
+//        intent1.addFlags(Intent.FLAG_FROM_BACKGROUND);
+        setResult(RESULT_OK,intent1);
+        startActivity(intent1);
         finish();
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+        super.onBackPressed();
     }
 
     //sms 리시버

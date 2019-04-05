@@ -9,34 +9,37 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".Kakao.GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Login.Login_Activity">
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="f3d77f96de19ac3e3098ed9551d8e6ed" />
 
-        </activity>
+
+        <activity android:name=".Login.Login_Activity"></activity>
         <activity android:name=".Sign.Sign_1_agree_Activity" />
         <activity android:name=".Sign.Sign_2_sms_Activity" />
         <activity
             android:name=".Sign.Sign_3_id_Activity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".Sign.Sign_4_profile">
-        </activity>
+        <activity android:name=".Sign.Sign_4_profile"></activity>
         <activity
             android:name=".Main_Activity"
             android:label="@string/title_activity_main_"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Profile_View"></activity>
     </application>
 
 </manifest>

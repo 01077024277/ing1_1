@@ -56,8 +56,9 @@ public class Sign_4_profile extends AppCompatActivity {
     Button skip,succ;
     String id;
     EditText name;
-    String imagePath;
+    String imagePath,name_,social;
     File tmpfile;
+    boolean change;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,26 +67,40 @@ public class Sign_4_profile extends AppCompatActivity {
         skip = findViewById(R.id.skip);
         name=findViewById(R.id.name);
         succ=findViewById(R.id.succ);
-
-        Sign_1_agree_Activity sign_1_agree_activity= (Sign_1_agree_Activity) Sign_1_agree_Activity.sign_1;
-        sign_1_agree_activity.finish();
+        change=false;
 
         final Intent intent=getIntent();
         id=intent.getStringExtra("id");
+        String nick = intent.getStringExtra("name");
         Toast.makeText(getApplicationContext(),id,Toast.LENGTH_SHORT).show();
 
+        name_=intent.getStringExtra("nname");
+        social=intent.getStringExtra("social");
+        if(intent.getIntExtra("change",0)==1){
+            skip.setVisibility(View.GONE);
+        }
 
 
 
 
 
 
-
-
-
+//        Log.d("name은",nick);
 //        id="qwe123";
-        name.setText(id);
+        if(nick==null) {
+            //첫가입
+            Log.d("Sign_4","실행");
+            name.setText(id);
+            Sign_1_agree_Activity sign_1_agree_activity= (Sign_1_agree_Activity) Sign_1_agree_Activity.sign_1;
+            sign_1_agree_activity.finish();
+        }
+        else{
+            //가입후 프로필 수정
+            name.setText(nick);
+            Bitmap bitmap=intent.getParcelableExtra("image");
 
+            profile.setImageBitmap(bitmap);
+        }
         Retrofit retrofit=new Retrofit.Builder().baseUrl(RetrofitExService.url).addConverterFactory(GsonConverterFactory.create()).build();
         http=retrofit.create(RetrofitExService.class);
 
@@ -114,10 +129,10 @@ public class Sign_4_profile extends AppCompatActivity {
                 final ProgressDialog progressDialog = new ProgressDialog(Sign_4_profile.this);
                 if (name.getText().toString().equals("")) {
                     Toast.makeText(getApplicationContext(), "닉네임을 입력해주세요", Toast.LENGTH_SHORT).show();
-                } else {
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setMessage("잠시만 기다려주세요");
-                    progressDialog.show();
+                } else if (name_==null) {
+//                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                    progressDialog.setMessage("잠시만 기다려주세요");
+//                    progressDialog.show();
 
 
                 try {
@@ -144,10 +159,18 @@ public class Sign_4_profile extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                            progressDialog.dismiss();
+//                            progressDialog.dismiss();
                             try {
                                 if (response.body().string().equals("1")) {
                                     //이미지 업로드 성공
+                                    Toast.makeText(getApplicationContext(), "성공", Toast.LENGTH_SHORT).show();
+                                    Intent intent1= new Intent();
+                                    intent1.putExtra("id",id);
+
+
+                                    setResult(RESULT_OK,intent1);
+                                    finish();
+                                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
 
                                 } else {
                                     Toast.makeText(getApplicationContext(), "잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show();
@@ -161,8 +184,8 @@ public class Sign_4_profile extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), "잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show();
+//                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "잠시후 111다시 시도해주세요", Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -179,7 +202,13 @@ public class Sign_4_profile extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                            progressDialog.dismiss();
+//                            progressDialog.dismiss();
+                            Intent intent1= new Intent();
+                            intent1.putExtra("id",id);
+                            intent1.putExtra("change",String.valueOf(change));
+                            setResult(RESULT_OK,intent1);
+                            finish();
+                            overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
 
                         }
 
@@ -190,12 +219,165 @@ public class Sign_4_profile extends AppCompatActivity {
                     });
                 }
 //                Intent intent1=new Intent(getApplicationContext(),Main_Activity.class);
-                    Intent intent1= new Intent();
-                    intent1.putExtra("id",id);
-                    setResult(RESULT_OK,intent1);
-                    finish();
-                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+
             }
+            //네이버로그인 회원가입일때
+            else if (social.equals("naver")){
+                    try{
+                        Log.d("리", imagePath.toString());
+                        File file = new File(tmpfile.getAbsolutePath());
+                        Log.d("리", "Filename " + file.getName());
+                        //RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                        RequestBody mFile = RequestBody.create(MediaType.parse("image/*"), file);
+                        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                        RequestBody id_send = RequestBody.create(MediaType.parse("text/plain"), name_);
+                        RequestBody nick = RequestBody.create(MediaType.parse("text/plain"),name.getText().toString());
+                        HashMap<String, RequestBody> data = new HashMap<>();
+                        data.put("name", filename);
+                        data.put("id", id_send);
+                        data.put("nick",nick);
+                        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), mFile);
+                        Call<ResponseBody> upload = http.naver_upload(fileToUpload, data);
+                        upload.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                try {
+                                    String result = response.body().string();
+                                    if(result.equals("1")){
+                                        Toast.makeText(getApplicationContext(),"성공",Toast.LENGTH_SHORT).show();
+                                        Intent intent1= new Intent();
+                                        intent1.putExtra("id",name_);
+                                        intent1.putExtra("social","naver");
+
+
+                                        setResult(RESULT_OK,intent1);
+                                        finish();
+                                        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+                                    }else{
+                                        Toast.makeText(getApplicationContext(),""+result,Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+
+                    }catch (NullPointerException e){
+                        Log.d("리", "널");
+                        //사진을 선택하지않음
+                        HashMap hashMap=new HashMap();
+                        hashMap.put("nick",name.getText().toString());
+                        hashMap.put("id",name_);
+                        hashMap.put("social","naver");
+                        http.nick(hashMap).enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+//                            progressDialog.dismiss();
+                                Intent intent1= new Intent();
+                                intent1.putExtra("id",name_);
+                                intent1.putExtra("social","naver");
+                                intent1.putExtra("change",String.valueOf(change));
+                                setResult(RESULT_OK,intent1);
+                                finish();
+                                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+                }else if(social.equals("kakao")){
+                    //카카오 프로필
+
+                    try{
+                        Log.d("리", imagePath.toString());
+                        File file = new File(tmpfile.getAbsolutePath());
+                        Log.d("리", "Filename " + file.getName());
+                        //RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                        RequestBody mFile = RequestBody.create(MediaType.parse("image/*"), file);
+                        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                        RequestBody id_send = RequestBody.create(MediaType.parse("text/plain"), name_);
+                        RequestBody nick = RequestBody.create(MediaType.parse("text/plain"),name.getText().toString());
+                        HashMap<String, RequestBody> data = new HashMap<>();
+                        data.put("name", filename);
+                        data.put("id", id_send);
+                        data.put("nick",nick);
+                        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), mFile);
+                        Call<ResponseBody> upload = http.kakao_upload(fileToUpload, data);
+                        upload.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                try {
+                                    String result = response.body().string();
+                                    if(result.equals("1")){
+                                        Toast.makeText(getApplicationContext(),"성공",Toast.LENGTH_SHORT).show();
+                                        Intent intent1= new Intent();
+                                        intent1.putExtra("id",name_);
+                                        intent1.putExtra("social","kakao");
+
+
+                                        setResult(RESULT_OK,intent1);
+                                        finish();
+                                        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+                                    }else{
+                                        Toast.makeText(getApplicationContext(),""+result,Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+
+                    }catch (NullPointerException e){
+                        Log.d("리", "널");
+                        //사진을 선택하지않음
+                        HashMap hashMap=new HashMap();
+                        hashMap.put("nick",name.getText().toString());
+                        hashMap.put("id",name_);
+                        hashMap.put("social","kakao");
+                        http.nick(hashMap).enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+//                            progressDialog.dismiss();
+                                Intent intent1= new Intent();
+                                intent1.putExtra("id",name_);
+                                intent1.putExtra("social","kakao");
+                                intent1.putExtra("change",String.valueOf(change));
+                                setResult(RESULT_OK,intent1);
+                                finish();
+                                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+
+
+
+                }
             }
         });
 
@@ -213,7 +395,7 @@ public class Sign_4_profile extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == PICK_FROM_ALBUM) {
             if(resultCode==RESULT_OK) {
-
+                change=true;
 
                 Uri uri = data.getData();
                 try {
@@ -232,7 +414,12 @@ public class Sign_4_profile extends AppCompatActivity {
 
                         image = rotate(image, exifDegree);
                         File storage =getApplicationContext().getCacheDir();
-                        tmpfile = new File(storage,""+id+".jpg");
+                        if(name_==null) {
+                            tmpfile = new File(storage, "" + id + ".jpg");
+                        }else{
+                            tmpfile = new File(storage, "" + name_ + ".jpg");
+
+                        }
                         tmpfile.createNewFile();
                         FileOutputStream out = new FileOutputStream(tmpfile);
 
@@ -322,13 +509,22 @@ public class Sign_4_profile extends AppCompatActivity {
 
 //        Intent intent=new Intent(getApplicationContext(),Main_Activity.class);
         Intent intent1= new Intent();
-        intent1.putExtra("id",id);
+        intent1.putExtra("change",String.valueOf(change));
+        if(name_!=null){
+            Log.d("실행",name_);
+            intent1.putExtra("id",name_);
+            intent1.putExtra("social",social);
+        }else{
+            intent1.putExtra("id",id);
+        }
         setResult(RESULT_OK,intent1);
         finish();
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
         super.onBackPressed();
 
     }
+
+
 }
 
 
