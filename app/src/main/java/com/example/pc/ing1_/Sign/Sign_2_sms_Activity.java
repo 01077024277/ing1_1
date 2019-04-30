@@ -25,6 +25,7 @@ import com.example.pc.ing1_.R;
 import com.example.pc.ing1_.RetrofitExService;
 import com.example.pc.ing1_.User;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
@@ -92,15 +93,20 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
                     Random random =new Random();
 //                    Log.d("랜덤값",random.nextInt(10000));
                     //랜덤값 전달
-                    auth_num = String.format("%06d", random.nextInt(1000000));
+//                    auth_num = String.format("%06d", random.nextInt(1000000));
                     HashMap<String,String> auth = new HashMap<>();
                     auth.put("phone",phone.getText().toString());
-                    auth.put("auth",auth_num);
+//                    auth.put("auth",auth_num);
                     //sms메시지 보내기
                     http.smsauth(auth).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                            try {
+                                auth_num=response.body().string().split("@##@")[1];
+                                Log.d("인증번호",auth_num);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
@@ -187,7 +193,7 @@ public class Sign_2_sms_Activity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //인증번호가 맞다면 알파값
-                if(s.length()==6&&s.toString().equals(auth_num)){
+                if(s.length()==6&&Hash.getSHA512(s.toString()).equals(auth_num)){
                     next.setVisibility(View.VISIBLE);
                     next.setBackgroundColor(Color.rgb(9,225,244));
                     next.setAlpha(1.0F);

@@ -35,6 +35,7 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
         sign_1=Sign_1_agree_Activity.this;
             // Inflate the layout for this fragment
         final String social = getIntent().getStringExtra("social");
+
         final String id = getIntent().getStringExtra("id");
         final String name =getIntent().getStringExtra("name");
         String dustmq = getIntent().getStringExtra("qwe");
@@ -54,7 +55,8 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
             c3.setChecked(true);
             c4.setChecked(true);
             next.setAlpha(1.0F);
-            
+
+
 
         }
 
@@ -143,6 +145,7 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
 
     }
 
+
     public void check(){
         if(c2.isChecked()&&c3.isChecked()&&c4.isChecked()){
             c1.setChecked(true);
@@ -159,6 +162,8 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
         check();
     }
 
+
+
     @Override
     public void onBackPressed() {
 
@@ -170,6 +175,8 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
         finish();
         super.onBackPressed();
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

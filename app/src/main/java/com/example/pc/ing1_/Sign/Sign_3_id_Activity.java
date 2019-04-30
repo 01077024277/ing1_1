@@ -42,8 +42,8 @@ public class Sign_3_id_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_3_id);
 
-        id_pattern=Pattern.compile("^([a-zA-Z]{1})(?=.*[0-9])(?=.*[A-Za-z])[a-zA-Z0-9]{4,11}$");
-        pass_pattern=Pattern.compile("^(?=.*[0-9])(?=.*[A-Za-z])[a-zA-Z0-9]{4,11}$");
+        id_pattern=Pattern.compile("^([a-zA-Z]{1})(?=.*[0-9])(?=.*[A-Za-z])[a-zA-Z0-9]{5,11}$");
+        pass_pattern=Pattern.compile("^(?=.*[0-9])(?=.*[A-Za-z])[a-zA-Z0-9]{5,11}$");
 
 //        id_pattern=Pattern.compile("^[a-zA-Z]{1}[a-zA-Z0-9]{4,11}$");
 
@@ -115,7 +115,7 @@ public class Sign_3_id_Activity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                id_alarm.setText("아이디는 영문+숫자 조합으로 5~12자");
+                id_alarm.setText("아이디는 영문+숫자 조합으로 6~12자");
                 id_alarm.setTextColor(Color.parseColor("#808080"));
             }
 
@@ -136,7 +136,7 @@ public class Sign_3_id_Activity extends AppCompatActivity {
 
                     Matcher matcher=pass_pattern.matcher(pass.getText().toString());
                     if(!matcher.find()){
-                        pass_text.setText("비밀번호는 영문+숫자 조합으로 5~12자");
+                        pass_text.setText("비밀번호는 영문+숫자 조합으로 6~12자");
                         pass_text.setTextColor(Color.parseColor("#ff0000"));
 
                     }else{

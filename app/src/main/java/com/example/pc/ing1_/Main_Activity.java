@@ -1,8 +1,10 @@
 package com.example.pc.ing1_;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -12,6 +14,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +35,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.pc.ing1_.Login.Login_Activity;
+import com.example.pc.ing1_.Menu.BlankFragment;
+import com.example.pc.ing1_.Menu.Main_frag;
 import com.example.pc.ing1_.Sign.Sign_1_agree_Activity;
 import com.example.pc.ing1_.Sign.Sign_4_profile;
 
@@ -56,6 +63,13 @@ RetrofitExService http;
     DrawerLayout drawer;
     TextView name;
     Bitmap bmp;
+    MenuItem menu_logout;
+    Menu menu;
+    SharedPreferences sf;
+    SharedPreferences.Editor sd;
+
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +78,10 @@ RetrofitExService http;
         Retrofit retrofit=new Retrofit.Builder().baseUrl(RetrofitExService.url).addConverterFactory(GsonConverterFactory.create()).build();
         http=retrofit.create(RetrofitExService.class);
 
+        sf = getSharedPreferences("login",MODE_PRIVATE);
+        sd=sf.edit();
+        fragmentManager=getSupportFragmentManager();
+        fragmentTransaction=fragmentManager.beginTransaction();
 
         init();
         name=header.findViewById(R.id.name);
@@ -71,9 +89,28 @@ RetrofitExService http;
         sign_button=header.findViewById(R.id.sign_button);
         profile_change=header.findViewById(R.id.profile_change);
 
-        final Intent intent=getIntent();
-        id=intent.getStringExtra("id");
-        social=intent.getStringExtra("social");
+        fragmentTransaction.replace(R.id.frag,new Main_frag());
+        fragmentTransaction.commit();
+
+//        final Intent intent=getIntent();
+//        id=intent.getStringExtra("id");
+//        social=intent.getStringExtra("social");
+        if(!sf.getString("id","").equals("")){
+           id=sf.getString("id","");
+           if(!sf.getString("social","").equals("")){
+               social=sf.getString("social",null);
+               Social_Login(social,id,1);
+           }else{
+               Login(1);
+           }
+            menu_logout.setVisible(true);
+
+        }else{
+            menu_logout.setVisible(false);
+        }
+
+        menu.findItem(R.id.nav_camera).setChecked(true);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             imageView.setBackground(new ShapeDrawable(new OvalShape()));
@@ -155,11 +192,21 @@ RetrofitExService http;
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.d("dddddd","pre");
+
+        return super.onPrepareOptionsMenu(menu);
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        Log.d("dddddd","cre");
         getMenuInflater().inflate(R.menu.main_, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -167,6 +214,7 @@ RetrofitExService http;
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -176,16 +224,22 @@ RetrofitExService http;
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        fragmentTransaction=fragmentManager.beginTransaction();
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Log.d("dddddd","sele");
         if (id == R.id.nav_camera) {
+            fragmentTransaction.replace(R.id.frag,new Main_frag());
+            fragmentTransaction.commit();
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
+            fragmentTransaction.replace(R.id.frag,new BlankFragment());
+            fragmentTransaction.commit();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -193,6 +247,15 @@ RetrofitExService http;
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+
+        }else  if(id==R.id.nav_logout){
+            sign_button.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.GONE);
+            profile_change.setVisibility(View.GONE);
+            item.setVisible(false);
+            sd.putString("id","");
+            sd.putString("social","");
+            sd.commit();
 
         }
 
@@ -221,6 +284,8 @@ RetrofitExService http;
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        menu=navigationView.getMenu();
+        menu_logout=menu.findItem(R.id.nav_logout);
         navigationView.setNavigationItemSelectedListener(this);
         header = navigationView.getHeaderView(0);
     }
@@ -282,15 +347,18 @@ RetrofitExService http;
 
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.e("에러","소셜로그인0");
         Log.e("에러","q   "+requestCode+"s   "+resultCode);
-        Log.e("에러",data.getStringExtra("id"));
+//        Log.e("에러",data.getStringExtra("id"));
         if(resultCode==RESULT_OK){
                 if(requestCode==100) {
+                    menu_logout.setVisible(true);
                     Log.e("에러","소셜로그인1");
+                    sd.putString("id",data.getStringExtra("id"));
                     Toast.makeText(getApplicationContext(), "성공", Toast.LENGTH_SHORT).show();
                     id=data.getStringExtra("id");
                     if(data.getStringExtra("change")==null){
@@ -306,11 +374,13 @@ RetrofitExService http;
                             //소셜 로그인
                             Log.e("에러","체인지 널 소셜네이버");
                             social="naver";
+                            sd.putString("social",social);
                             Social_Login("naver",id,1);
 
                         }else if(data.getStringExtra("social").equals("kakao")){
                             Log.e("에러","체인지 널 소셜카카오");
                             social="kakao";
+                            sd.putString("social",social);
                             Social_Login("kakao",id,1);
                         }
                     }else{
@@ -322,11 +392,13 @@ RetrofitExService http;
                         }else if(data.getStringExtra("social").equals("naver")){
                             Log.e("에러","체인지 널 ㄴㄴ 네이버");
                             social="naver";
+                            sd.putString("social",social);
                             Social_Login("naver",id,0);
                         }else if(data.getStringExtra("social").equals("kakao")){
                             Log.e("에러","체인지 널 ㄴㄴ 카카오");
 
                             social="kakao";
+                            sd.putString("social",social);
                             Social_Login("kakao",id,0);
                         }
                     }
@@ -334,10 +406,13 @@ RetrofitExService http;
 
 
                 }
+                sd.commit();
             }
 
 
     }
+
+
     public void Social_Login(String social, final String uid, int i){
         Log.e("에러","소셜로그인2");
         if(social.equals("naver")){
@@ -439,4 +514,9 @@ RetrofitExService http;
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 }
