@@ -48,7 +48,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.maps.android:android-maps-utils:0.4'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
-
-
+    //스와이프 리프레쉬
+    compile 'com.github.orangegangsters:swipy:1.2.3@aar'
+    implementation 'com.liaoinstan.springview:library:1.5.1'
 
 }

@@ -15,6 +15,8 @@ public class Cluster_Item implements ClusterItem {
         this.store = store;
     }
 
+
+
     public Store getStore() {
         return store;
     }
@@ -25,6 +27,7 @@ public class Cluster_Item implements ClusterItem {
 
     @Override
     public LatLng getPosition() {
-        return new LatLng(Double.parseDouble(store.getLat()),Double.parseDouble(store.getLon()));
+            return new LatLng(Double.parseDouble(store.getLat()), Double.parseDouble(store.getLon()));
+
     }
 }

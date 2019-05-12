@@ -37,8 +37,8 @@
         android:id="@+id/rating"
         style="@style/Base.Widget.AppCompat.RatingBar"
         android:layout_width="239dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="68dp"
         android:layout_marginRight="68dp"
         android:layout_marginBottom="16dp"
@@ -49,29 +49,30 @@
         android:stepSize="0.1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/old_address"
-        app:layout_constraintVertical_bias="0.166" />
+        app:layout_constraintTop_toBottomOf="@+id/new_address"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/rating_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="11dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:text="asdasd"
         android:textColor="#ff0000"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.746"
+        app:layout_constraintHorizontal_bias="0.752"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/old_address" />
+        app:layout_constraintTop_toTopOf="@+id/rating" />
 
     <TextView
         android:id="@+id/new_address"
-        android:layout_width="250dp"
+        android:layout_width="wrap_content"
         android:gravity="right"
 
         android:layout_height="0dp"
@@ -87,20 +88,15 @@
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <TextView
-        android:id="@+id/old_address"
-
-        android:layout_width="250dp"
-        android:gravity="right"
-
+        android:id="@+id/review_count"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:text="oooooooooooo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/img"
-        app:layout_constraintTop_toBottomOf="@+id/new_address" />
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="16dp"
+        android:text="123132"
+        app:layout_constraintStart_toEndOf="@+id/rating_point"
+        app:layout_constraintTop_toTopOf="@+id/rating" />
+
+
 </android.support.constraint.ConstraintLayout>

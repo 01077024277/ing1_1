@@ -39,14 +39,20 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+<!---->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".Profile_View" />
-        <activity android:name=".asd"></activity>
-        <activity android:name=".Menu.Cluster_Activity"
-            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"></activity>
+        <activity android:name=".asd" />
+        <activity
+            android:name=".Menu.Main.Cluster_Activity"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+        <activity
+            android:name=".Menu.Main.Store_info_Activity"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+
+        <activity android:name=".aaa.MainActivity"></activity>
     </application>
 
 </manifest>

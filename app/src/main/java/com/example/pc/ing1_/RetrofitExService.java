@@ -1,9 +1,6 @@
 package com.example.pc.ing1_;
 
-import com.example.pc.ing1_.Login.Hash;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +9,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -92,8 +88,9 @@ public interface RetrofitExService {
     @GET("gps_store.php")
     Call <List<Store>> search_store(@QueryMap HashMap<String,String> aa);
 
-
-
+    @GET("Store_Info.php")
+    Call<JsonObject> store_info(@Query("no") int no);
+    @GET("Store_Info.php")
 
 
 
