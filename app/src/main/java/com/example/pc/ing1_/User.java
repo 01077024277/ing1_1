@@ -9,8 +9,10 @@ public class User{
     String password;
     String name;
     String profile;
+    String height;
+    String weight;
 
-    public User(int no, String phone, String social, String uid, String id, String password, String name, String profile) {
+    public User(int no, String phone, String social, String uid, String id, String password, String name, String profile, String height, String weight) {
         this.no = no;
         this.phone = phone;
         this.social = social;
@@ -19,6 +21,8 @@ public class User{
         this.password = password;
         this.name = name;
         this.profile = profile;
+        this.height = height;
+        this.weight = weight;
     }
 
     public int getNo() {
@@ -83,5 +87,21 @@ public class User{
 
     public void setProfile(String profile) {
         this.profile = profile;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
     }
 }

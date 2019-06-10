@@ -9,6 +9,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -32,6 +33,8 @@ import com.bumptech.glide.Glide;
 import com.example.pc.ing1_.Login.Login_Activity;
 import com.example.pc.ing1_.Menu.BlankFragment;
 import com.example.pc.ing1_.Menu.Main.Main_frag;
+import com.example.pc.ing1_.Menu.Menu.Menu_Activity;
+import com.example.pc.ing1_.Menu.Menu.Menu_Activity2;
 import com.example.pc.ing1_.Sign.Sign_4_profile;
 
 import okhttp3.ResponseBody;
@@ -52,7 +55,7 @@ RetrofitExService http;
     DrawerLayout drawer;
     TextView name;
     Bitmap bmp;
-    MenuItem menu_logout;
+    MenuItem menu_logout,select;
     Menu menu;
     SharedPreferences sf;
     SharedPreferences.Editor sd;
@@ -69,6 +72,7 @@ RetrofitExService http;
 
         sf = getSharedPreferences("login",MODE_PRIVATE);
         sd=sf.edit();
+
         fragmentManager=getSupportFragmentManager();
         fragmentTransaction=fragmentManager.beginTransaction();
 
@@ -97,8 +101,10 @@ RetrofitExService http;
         }else{
             menu_logout.setVisible(false);
         }
-
+        Toast.makeText(getApplicationContext(),sf.getString("phone",""),Toast.LENGTH_SHORT).show();
         menu.findItem(R.id.nav_camera).setChecked(true);
+
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -207,9 +213,10 @@ RetrofitExService http;
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Log.d("dddddd","seeee1");
             return true;
         }
-
+        Log.d("dddddd","seeee2");
         return super.onOptionsItemSelected(item);
     }
 
@@ -225,11 +232,17 @@ RetrofitExService http;
         if (id == R.id.nav_camera) {
             fragmentTransaction.replace(R.id.frag,new Main_frag());
             fragmentTransaction.commit();
+            select=item;
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
             fragmentTransaction.replace(R.id.frag,new BlankFragment());
             fragmentTransaction.commit();
+            select=item;
+
         } else if (id == R.id.nav_slideshow) {
+//            Intent intent =new Intent(getApplicationContext(),Menu_Activity.class);
+            Intent intent =new Intent(getApplicationContext(),Menu_Activity2.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
 
@@ -241,9 +254,15 @@ RetrofitExService http;
             sign_button.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
             profile_change.setVisibility(View.GONE);
+//            item.setChecked(false);
             item.setVisible(false);
             sd.putString("id","");
             sd.putString("social","");
+            sd.putString("height","");
+            sd.putString("weight","");
+            sd.putString("gender","");
+            sd.putString("age","");
+            sd.putString("no","");
             sd.commit();
 
         }
@@ -271,6 +290,36 @@ RetrofitExService http;
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        drawer.setDrawerListener(new DrawerLayout.DrawerListener() {
+            int qwe=0;
+            @Override
+            public void onDrawerSlide(@NonNull View view, float v) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View view) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View view) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int i) {
+                Log.d("qweqwe","ccc"+i);
+                if(i==2){
+                    if(select==null){
+                        menu.findItem(R.id.nav_camera).setChecked(true);
+                    }else{
+                        select.setChecked(true);
+                    }
+                }
+
+            }
+        });
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         menu=navigationView.getMenu();
@@ -292,6 +341,11 @@ RetrofitExService http;
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     login_user = response.body();
+                    sd.putString("phone",login_user.getPhone());
+                    sd.putString("height",login_user.getHeight());
+                    sd.putString("weight",login_user.getWeight());
+                    sd.putString("no", String.valueOf(login_user.getNo()));
+                    sd.commit();
                     name.setText(login_user.getName());
                     Log.d("프로필",login_user.getProfile());
                     //프로필이 없으면 기본 이미지
@@ -346,8 +400,10 @@ RetrofitExService http;
         if(resultCode==RESULT_OK){
                 if(requestCode==100) {
                     menu_logout.setVisible(true);
+                    menu_logout.setChecked(false);
                     Log.e("에러","소셜로그인1");
                     sd.putString("id",data.getStringExtra("id"));
+
                     Toast.makeText(getApplicationContext(), "성공", Toast.LENGTH_SHORT).show();
                     id=data.getStringExtra("id");
                     if(data.getStringExtra("change")==null){
@@ -412,12 +468,18 @@ RetrofitExService http;
                     sign_button.setVisibility(View.GONE);
                     imageView.setVisibility(View.VISIBLE);
                     profile_change.setVisibility(View.VISIBLE);
-                    Call<User> user = http.naver_login(id);
+                    final Call<User> user = http.naver_login(id);
                     user.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
                             login_user = response.body();
                             name.setText(login_user.getName());
+                            sd.putString("phone",login_user.getPhone());
+                            sd.putString("height",login_user.getHeight());
+                            sd.putString("weight",login_user.getWeight());
+                            sd.putString("no", String.valueOf(login_user.getNo()));
+
+                            sd.commit();
                             Log.d("프로필",login_user.getUid());
                             //프로필이 없으면 기본 이미지
                             if (login_user.getProfile().equals("")) {
@@ -467,6 +529,12 @@ RetrofitExService http;
                     profile_change.setVisibility(View.VISIBLE);
                     Call<User> user = http.naver_login(id);
                     login_user = response.body();
+                    sd.putString("phone",login_user.getPhone());
+                    sd.putString("height",login_user.getHeight());
+                    sd.putString("weight",login_user.getWeight());
+                    sd.putString("no", String.valueOf(login_user.getNo()));
+
+                    sd.commit();
                     name.setText(login_user.getName());
                     Log.d("프로필",login_user.getUid());
                     //프로필이 없으면 기본 이미지

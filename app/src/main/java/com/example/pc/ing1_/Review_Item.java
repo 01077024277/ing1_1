@@ -1,16 +1,19 @@
 package com.example.pc.ing1_;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Review_Item implements Serializable {
-    String content,img,nick;
+    String content, nick,profile;
+    ArrayList<String> img;
     int point;
     boolean daum_user;
 
-    public Review_Item(String content, String img, String nick, int point, boolean daum_user) {
+    public Review_Item(String content, String nick, String profile, ArrayList<String> img, int point, boolean daum_user) {
         this.content = content;
-        this.img = img;
         this.nick = nick;
+        this.profile = profile;
+        this.img = img;
         this.point = point;
         this.daum_user = daum_user;
     }
@@ -23,20 +26,28 @@ public class Review_Item implements Serializable {
         this.content = content;
     }
 
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
     public String getNick() {
         return nick;
     }
 
     public void setNick(String nick) {
         this.nick = nick;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public ArrayList<String> getImg() {
+        return img;
+    }
+
+    public void setImg(ArrayList<String> img) {
+        this.img = img;
     }
 
     public int getPoint() {

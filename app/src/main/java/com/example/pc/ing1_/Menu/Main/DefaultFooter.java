@@ -59,7 +59,7 @@ public class DefaultFooter extends BaseFooter {
 
     @Override
     public void onFinishAnim() {
-        footerTitle.setText("갱신");
+        footerTitle.setText("불러오는중");
         footerTitle.setVisibility(View.VISIBLE);
         footerProgressbar.setVisibility(View.INVISIBLE);
     }

@@ -1,7 +1,14 @@
 package com.example.pc.ing1_;
 
+import com.example.pc.ing1_.Menu.Menu.Food_Item;
+import com.example.pc.ing1_.Menu.Menu.Food_info;
+import com.example.pc.ing1_.Menu.Menu.Food_input;
+import com.example.pc.ing1_.Menu.Menu.Food_list_item;
 import com.google.gson.JsonObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -87,6 +94,9 @@ public interface RetrofitExService {
 
     @GET("gps_store.php")
     Call <List<Store>> search_store(@QueryMap HashMap<String,String> aa);
+    @GET("store_size.php")
+    Call <ResponseBody> search_size(@QueryMap HashMap<String,String> aa);
+
 
     @GET("Store_Info.php")
     Call<JsonObject> store_info(@Query("no") int no);
@@ -104,5 +114,18 @@ public interface RetrofitExService {
 
     @GET("/old.php")
     Call<ResponseBody> re (@QueryMap HashMap<String,String>  map);
+
+
+    @GET("/food_sqlite.php")
+    Call<List<Food_Item>> food_sqlite (@Query("search") String a);
+
+    @GET("/food_match.php")
+    Call<List<Food_list_item>> food_match(@QueryMap HashMap<String,String> a);
+    @GET("/food_match_max.php")
+    Call<ResponseBody> food_match_max(@Query("value") String a);
+    @GET("/food_one.php")
+    Call<List<Food_info>> food_one(@Query("food_name") String a);
+
+
 }
 

@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".Kakao.GlobalApplication"
@@ -39,7 +40,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-<!---->
+                <!--  -->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -48,11 +49,15 @@
         <activity
             android:name=".Menu.Main.Cluster_Activity"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
-        <activity
-            android:name=".Menu.Main.Store_info_Activity"
-            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
-
-        <activity android:name=".aaa.MainActivity"></activity>
+        <activity android:name=".Menu.Main.Store_info_Activity" />
+        <activity android:name=".aaa.MainActivity" />
+        <activity android:name=".Menu.Main.Image_Total_Activity" />
+        <activity android:name=".Menu.Menu.Menu_Activity" />
+        <activity android:name=".Menu.Menu.Search_Activity" />
+        <activity android:name=".Menu.Menu.Menu_Activity2" />
+        <activity android:name=".Menu.Menu.Food_input" />
+        <activity android:name=".Menu.Menu.Food_Info_Activity" />
+        <activity android:name=".Menu.Menu.Schedule"></activity>
     </application>
 
 </manifest>

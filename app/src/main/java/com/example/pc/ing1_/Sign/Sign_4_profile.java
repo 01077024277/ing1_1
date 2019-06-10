@@ -2,6 +2,7 @@ package com.example.pc.ing1_.Sign;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,10 +57,14 @@ public class Sign_4_profile extends AppCompatActivity {
     ImageView profile;
     Button skip,succ;
     String id;
-    EditText name;
+    EditText name,zl,ahaanrp,age;
     String imagePath,name_,social;
     File tmpfile;
+    String phone;
     boolean change;
+    SharedPreferences sf;
+    SharedPreferences.Editor sd;
+    RadioButton f,m;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +74,22 @@ public class Sign_4_profile extends AppCompatActivity {
         name=findViewById(R.id.name);
         succ=findViewById(R.id.succ);
         change=false;
+        zl=findViewById(R.id.zl);
+        ahaanrp=findViewById(R.id.ahaanrp);
+        age=findViewById(R.id.zl2);
+        f=findViewById(R.id.radioButton2);
+        m=findViewById(R.id.radioButton4);
+
+        sf = getSharedPreferences("login",MODE_PRIVATE);
+        sd=sf.edit();
+        zl.setText(sf.getString("height","").toString());
+        ahaanrp.setText(sf.getString("weight","").toString());
+        age.setText(sf.getString("age","").toString());
+
 
         final Intent intent=getIntent();
         id=intent.getStringExtra("id");
+        phone=intent.getStringExtra("phone");
         String nick = intent.getStringExtra("name");
         Toast.makeText(getApplicationContext(),id,Toast.LENGTH_SHORT).show();
 
@@ -98,6 +117,13 @@ public class Sign_4_profile extends AppCompatActivity {
             //가입후 프로필 수정
             name.setText(nick);
             Bitmap bitmap=intent.getParcelableExtra("image");
+            age.setVisibility(View.GONE);
+            m.setVisibility(View.GONE);
+            f.setVisibility(View.GONE);
+            TextView t17,t18,t20;
+            findViewById(R.id.textView17).setVisibility(View.GONE);
+            findViewById(R.id.textView18).setVisibility(View.GONE);
+            findViewById(R.id.textView20).setVisibility(View.GONE);
 
             profile.setImageBitmap(bitmap);
         }
@@ -129,7 +155,14 @@ public class Sign_4_profile extends AppCompatActivity {
                 final ProgressDialog progressDialog = new ProgressDialog(Sign_4_profile.this);
                 if (name.getText().toString().equals("")) {
                     Toast.makeText(getApplicationContext(), "닉네임을 입력해주세요", Toast.LENGTH_SHORT).show();
-                } else if (name_==null) {
+                }else if ((f.getVisibility()==View.VISIBLE&&m.getVisibility()==View.VISIBLE&&age.getVisibility()==View.VISIBLE)&&(zl.getText().toString().equals("") || ahaanrp.getText().toString().equals("")||age.getText().toString().equals("")||(!f.isChecked()&&!m.isChecked()))){
+                    Toast.makeText(getApplicationContext(), "필수요소를 입력해주세요2", Toast.LENGTH_SHORT).show();
+
+                }else if ((f.getVisibility()!=View.VISIBLE&&m.getVisibility()!=View.VISIBLE&&age.getVisibility()!=View.VISIBLE)&&(zl.getText().toString().equals("") || ahaanrp.getText().toString().equals(""))){
+                    Toast.makeText(getApplicationContext(), "필수요소를 입력해주세요1", Toast.LENGTH_SHORT).show();
+                }
+                else if (name_==null) {
+
 //                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 //                    progressDialog.setMessage("잠시만 기다려주세요");
 //                    progressDialog.show();
@@ -145,11 +178,42 @@ public class Sign_4_profile extends AppCompatActivity {
                     RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
                     RequestBody id_send = RequestBody.create(MediaType.parse("text/plain"), id);
                     RequestBody nick = RequestBody.create(MediaType.parse("text/plain"),name.getText().toString());
+                    RequestBody he = RequestBody.create(MediaType.parse("text/plain"),zl.getText().toString());
+                    RequestBody wi = RequestBody.create(MediaType.parse("text/plain"),ahaanrp.getText().toString());
+                    RequestBody age1;
+                    RequestBody gender;
+                    if(f.getVisibility()!=View.VISIBLE&&m.getVisibility()!=View.VISIBLE&&age.getVisibility()!=View.VISIBLE){
+                        age1 = RequestBody.create(MediaType.parse("text/plain"),sf.getString("age",""));
+                        gender = RequestBody.create(MediaType.parse("text/plain"),sf.getString("gender",""));
+
+                    }
+                    else {
+                        //첫 가입
+                        age1 = RequestBody.create(MediaType.parse("text/plain"),age.getText().toString());
+                        sd.putString("age",age.getText().toString());
+                        if (f.isChecked()) {
+                            gender = RequestBody.create(MediaType.parse("text/plain"), "여");
+                            sd.putString("gender", "여");
+                        } else {
+                            gender = RequestBody.create(MediaType.parse("text/plain"), "남");
+                            sd.putString("gender", "남");
+
+
+                        }
+                    }
                     HashMap<String, RequestBody> data = new HashMap<>();
                     data.put("name", filename);
                     data.put("id", id_send);
                     data.put("nick",nick);
+                    data.put("zl",he);
+                    data.put("ahaanrp",wi);
+                    data.put("gender",gender);
+                    data.put("age",age1);
                     MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), mFile);
+                    sd.putString("height",zl.getText().toString());
+                    sd.putString("weight",ahaanrp.getText().toString());
+
+                    sd.commit();
 
 
 
@@ -166,6 +230,7 @@ public class Sign_4_profile extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "성공", Toast.LENGTH_SHORT).show();
                                     Intent intent1= new Intent();
                                     intent1.putExtra("id",id);
+                                    intent1.putExtra("phone",phone);
 
 
                                     setResult(RESULT_OK,intent1);
@@ -198,6 +263,32 @@ public class Sign_4_profile extends AppCompatActivity {
                     HashMap hashMap=new HashMap();
                     hashMap.put("nick",name.getText().toString());
                     hashMap.put("id",id);
+                    hashMap.put("zl",zl.getText().toString());
+                    hashMap.put("ahaanrp",ahaanrp.getText().toString());
+
+                    if(f.getVisibility()!=View.VISIBLE&&m.getVisibility()!=View.VISIBLE&&age.getVisibility()!=View.VISIBLE) {
+                        hashMap.put("age",sf.getString("age",""));
+                        hashMap.put("gender",sf.getString("gender",""));
+                    }
+                     else{
+                        sd.putString("age",age.getText().toString());
+                        hashMap.put("age",age.getText().toString());
+                        if(f.isChecked()){
+                            hashMap.put("gender","여");
+                            sd.putString("gender","여");
+
+                        }
+                        else{
+                            hashMap.put("gender","남");
+                            sd.putString("gender","남");
+
+
+                        }
+                    }
+                    sd.putString("height",zl.getText().toString());
+                    sd.putString("weight",ahaanrp.getText().toString());
+
+                    sd.commit();
                     http.nick(hashMap).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -206,6 +297,8 @@ public class Sign_4_profile extends AppCompatActivity {
                             Intent intent1= new Intent();
                             intent1.putExtra("id",id);
                             intent1.putExtra("change",String.valueOf(change));
+                            intent1.putExtra("phone",phone);
+
                             setResult(RESULT_OK,intent1);
                             finish();
                             overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
@@ -232,10 +325,43 @@ public class Sign_4_profile extends AppCompatActivity {
                         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
                         RequestBody id_send = RequestBody.create(MediaType.parse("text/plain"), name_);
                         RequestBody nick = RequestBody.create(MediaType.parse("text/plain"),name.getText().toString());
+                        RequestBody he = RequestBody.create(MediaType.parse("text/plain"),zl.getText().toString());
+                        RequestBody wi = RequestBody.create(MediaType.parse("text/plain"),ahaanrp.getText().toString());
+                        RequestBody age1;
+                        RequestBody gender;
+                        if(f.getVisibility()!=View.VISIBLE&&m.getVisibility()!=View.VISIBLE&&age.getVisibility()!=View.VISIBLE){
+                            age1 = RequestBody.create(MediaType.parse("text/plain"),sf.getString("age",""));
+                            gender = RequestBody.create(MediaType.parse("text/plain"),sf.getString("gender",""));
+
+                        }
+                        else {
+                            //첫 가입
+                            age1 = RequestBody.create(MediaType.parse("text/plain"),age.getText().toString());
+                            sd.putString("age",age.getText().toString());
+                            if (f.isChecked()) {
+                                gender = RequestBody.create(MediaType.parse("text/plain"), "여");
+                                sd.putString("gender", "여");
+                            } else {
+                                gender = RequestBody.create(MediaType.parse("text/plain"), "남");
+                                sd.putString("gender", "남");
+
+
+                            }
+                        }
+                        sd.putString("height",zl.getText().toString());
+                        sd.putString("weight",ahaanrp.getText().toString());
+
+                        sd.commit();
                         HashMap<String, RequestBody> data = new HashMap<>();
+
+                        data.put("zl",he);
+                        data.put("ahaanrp",wi);
                         data.put("name", filename);
                         data.put("id", id_send);
                         data.put("nick",nick);
+                        data.put("gender",gender);
+                        data.put("age",age1);
+
                         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), mFile);
                         Call<ResponseBody> upload = http.naver_upload(fileToUpload, data);
                         upload.enqueue(new Callback<ResponseBody>() {
@@ -248,6 +374,8 @@ public class Sign_4_profile extends AppCompatActivity {
                                         Intent intent1= new Intent();
                                         intent1.putExtra("id",name_);
                                         intent1.putExtra("social","naver");
+                                        intent1.putExtra("phone",phone);
+
 
 
                                         setResult(RESULT_OK,intent1);
@@ -275,6 +403,31 @@ public class Sign_4_profile extends AppCompatActivity {
                         hashMap.put("nick",name.getText().toString());
                         hashMap.put("id",name_);
                         hashMap.put("social","naver");
+                        hashMap.put("zl",zl.getText().toString());
+                        hashMap.put("ahaanrp",ahaanrp.getText().toString());
+                        if(f.getVisibility()!=View.VISIBLE&&m.getVisibility()!=View.VISIBLE&&age.getVisibility()!=View.VISIBLE) {
+                            hashMap.put("age",sf.getString("age",""));
+                            hashMap.put("gender",sf.getString("gender",""));
+                        }
+                        else{
+                            sd.putString("age",age.getText().toString());
+                            hashMap.put("age",age.getText().toString());
+                            if(f.isChecked()){
+                                hashMap.put("gender","여");
+                                sd.putString("gender","여");
+
+                            }
+                            else{
+                                hashMap.put("gender","남");
+                                sd.putString("gender","남");
+
+
+                            }
+                        }
+
+                        sd.putString("height",zl.getText().toString());
+                        sd.putString("weight",ahaanrp.getText().toString());
+                        sd.commit();
                         http.nick(hashMap).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -284,6 +437,8 @@ public class Sign_4_profile extends AppCompatActivity {
                                 intent1.putExtra("id",name_);
                                 intent1.putExtra("social","naver");
                                 intent1.putExtra("change",String.valueOf(change));
+                                intent1.putExtra("phone",phone);
+
                                 setResult(RESULT_OK,intent1);
                                 finish();
                                 overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
@@ -310,9 +465,40 @@ public class Sign_4_profile extends AppCompatActivity {
                         RequestBody id_send = RequestBody.create(MediaType.parse("text/plain"), name_);
                         RequestBody nick = RequestBody.create(MediaType.parse("text/plain"),name.getText().toString());
                         HashMap<String, RequestBody> data = new HashMap<>();
+                        RequestBody he = RequestBody.create(MediaType.parse("text/plain"),zl.getText().toString());
+                        RequestBody wi = RequestBody.create(MediaType.parse("text/plain"),ahaanrp.getText().toString());
+                        RequestBody age1;
+                        RequestBody gender;
+                        if(f.getVisibility()!=View.VISIBLE&&m.getVisibility()!=View.VISIBLE&&age.getVisibility()!=View.VISIBLE){
+                            age1 = RequestBody.create(MediaType.parse("text/plain"),sf.getString("age",""));
+                            gender = RequestBody.create(MediaType.parse("text/plain"),sf.getString("gender",""));
+
+                        }
+                        else {
+                            //첫 가입
+                            age1 = RequestBody.create(MediaType.parse("text/plain"),age.getText().toString());
+                            sd.putString("age",age.getText().toString());
+                            if (f.isChecked()) {
+                                gender = RequestBody.create(MediaType.parse("text/plain"), "여");
+                                sd.putString("gender", "여");
+                            } else {
+                                gender = RequestBody.create(MediaType.parse("text/plain"), "남");
+                                sd.putString("gender", "남");
+
+
+                            }
+                        }
+
+                        sd.putString("height",zl.getText().toString());
+                        sd.putString("weight",ahaanrp.getText().toString());
+                        sd.commit();
+                        data.put("zl",he);
+                        data.put("ahaanrp",wi);
+                        data.put("age",age1);
                         data.put("name", filename);
                         data.put("id", id_send);
                         data.put("nick",nick);
+                        data.put("gender",gender);
                         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), mFile);
                         Call<ResponseBody> upload = http.kakao_upload(fileToUpload, data);
                         upload.enqueue(new Callback<ResponseBody>() {
@@ -325,6 +511,7 @@ public class Sign_4_profile extends AppCompatActivity {
                                         Intent intent1= new Intent();
                                         intent1.putExtra("id",name_);
                                         intent1.putExtra("social","kakao");
+                                        intent1.putExtra("phone",phone);
 
 
                                         setResult(RESULT_OK,intent1);
@@ -348,10 +535,34 @@ public class Sign_4_profile extends AppCompatActivity {
                     }catch (NullPointerException e){
                         Log.d("리", "널");
                         //사진을 선택하지않음
+                        sd.putString("height",zl.getText().toString());
+                        sd.putString("weight",ahaanrp.getText().toString());
+                        sd.commit();
                         HashMap hashMap=new HashMap();
                         hashMap.put("nick",name.getText().toString());
                         hashMap.put("id",name_);
                         hashMap.put("social","kakao");
+                        hashMap.put("zl",zl.getText().toString());
+                        hashMap.put("ahaanrp",ahaanrp.getText().toString());
+                        if(f.getVisibility()!=View.VISIBLE&&m.getVisibility()!=View.VISIBLE&&age.getVisibility()!=View.VISIBLE) {
+                            hashMap.put("age",sf.getString("age",""));
+                            hashMap.put("gender",sf.getString("gender",""));
+                        }
+                        else{
+                            sd.putString("age",age.getText().toString());
+                            hashMap.put("age",age.getText().toString());
+                            if(f.isChecked()){
+                                hashMap.put("gender","여");
+                                sd.putString("gender","여");
+
+                            }
+                            else{
+                                hashMap.put("gender","남");
+                                sd.putString("gender","남");
+
+
+                            }
+                        }
                         http.nick(hashMap).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -360,6 +571,8 @@ public class Sign_4_profile extends AppCompatActivity {
                                 Intent intent1= new Intent();
                                 intent1.putExtra("id",name_);
                                 intent1.putExtra("social","kakao");
+                                intent1.putExtra("phone",phone);
+
                                 intent1.putExtra("change",String.valueOf(change));
                                 setResult(RESULT_OK,intent1);
                                 finish();
@@ -510,6 +723,7 @@ public class Sign_4_profile extends AppCompatActivity {
 //        Intent intent=new Intent(getApplicationContext(),Main_Activity.class);
         Intent intent1= new Intent();
         intent1.putExtra("change",String.valueOf(change));
+        intent1.putExtra("phone",phone);
         if(name_!=null){
             Log.d("실행",name_);
             intent1.putExtra("id",name_);

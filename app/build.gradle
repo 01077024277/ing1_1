@@ -33,6 +33,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.google.code.gson:gson:2.7'
+    implementation 'com.android.support:recyclerview-v7:23.2.1'
 
 
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
@@ -51,5 +52,10 @@ dependencies {
     //스와이프 리프레쉬
     compile 'com.github.orangegangsters:swipy:1.2.3@aar'
     implementation 'com.liaoinstan.springview:library:1.5.1'
+    //원형 차트
+    compile 'com.github.PhilJay:MpAndroidChart:v3.0.2'
+    //스피너
+
+    compile 'com.github.ganfra:material-spinner:2.0.0'
 
 }

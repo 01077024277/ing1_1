@@ -227,6 +227,7 @@ public class Sign_3_id_Activity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"가입완료",Toast.LENGTH_SHORT).show();
                                 Intent intent1=new Intent(getApplicationContext(),Sign_4_profile.class);
                                 intent1.putExtra("id",id_);
+                                intent1.putExtra("phone",phone);
                                 intent1.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                                 startActivity(intent1);
                                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
