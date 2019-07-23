@@ -1,11 +1,7 @@
 package com.example.pc.ing1_.Menu.Main;
 
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -15,15 +11,10 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,18 +31,11 @@ import com.example.pc.ing1_.Store;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.maps.android.MarkerManager;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,6 +60,7 @@ public class Store_info_Activity extends AppCompatActivity {
     ArrayList <String> img_total,img_review;
     RecyclerView review_recycle;
     Reivew_Adapter reivew_adapter;
+    double user_lat,user_lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +88,8 @@ public class Store_info_Activity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
+        user_lat=intent.getDoubleExtra("lat",0);
+        user_lon=intent.getDoubleExtra("lon",0);
         review_items = new ArrayList<>();
         menu_item = new ArrayList<>();
         store = (Store) intent.getSerializableExtra("store");
@@ -221,7 +208,7 @@ public class Store_info_Activity extends AppCompatActivity {
 
                     for(int i=0;i<img_total.size();i++){
                         if(i==0){
-                            Glide.with(getApplicationContext()).load(img_total.get(i)).centerCrop().into(total1);
+                            Glide.with(getApplicationContext()).load(img_total.get(i)).centerCrop().thumbnail(0.1f).into(total1);
                             total1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -234,7 +221,7 @@ public class Store_info_Activity extends AppCompatActivity {
                                 }
                             });
                         }if (i==1){
-                            Glide.with(getApplicationContext()).load(img_total.get(i)).centerCrop().into(total2);
+                            Glide.with(getApplicationContext()).load(img_total.get(i)).centerCrop().thumbnail(0.1f).into(total2);
                             total2.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -249,7 +236,7 @@ public class Store_info_Activity extends AppCompatActivity {
                             });
 
                         }if(i==2){
-                            Glide.with(getApplicationContext()).load(img_total.get(i)).centerCrop().into(total3);
+                            Glide.with(getApplicationContext()).load(img_total.get(i)).centerCrop().thumbnail(0.1f).into(total3);
                             total3.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -297,7 +284,7 @@ public class Store_info_Activity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                Log.d("음식점",String.valueOf(t));
             }
         });
 
@@ -377,6 +364,20 @@ public class Store_info_Activity extends AppCompatActivity {
             }
         });
 
+
+        //길찾기를 눌었을떄 처리
+
+        road.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(getApplicationContext(),Directions_Activity.class);
+                intent1.putExtra("lat",user_lat);
+                intent1.putExtra("lon",user_lon);
+                intent1.putExtra("store",store);
+                startActivity(intent1);
+
+            }
+        });
 
 
 

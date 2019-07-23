@@ -1,6 +1,7 @@
 package com.example.pc.ing1_.Login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -61,7 +62,8 @@ public class Login_Activity extends AppCompatActivity {
     EditText id, pass;
     TextView textView;
     private String TAG = "Login_Activity";
-
+    SharedPreferences sf;
+    SharedPreferences.Editor sd;
 
     private SessionCallback callback;
 
@@ -74,7 +76,8 @@ public class Login_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-
+        sf = getSharedPreferences("login",MODE_PRIVATE);
+        sd=sf.edit();
         init();
         setNaver();
         kakaoData();
@@ -131,6 +134,8 @@ public class Login_Activity extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(), "로그인", Toast.LENGTH_SHORT).show();
                                         Intent intent= new Intent();
                                         intent.putExtra("id",id.getText().toString());
+                                        sd.putString("id",id.getText().toString());
+                                        sd.putString("social",null);
                                         setResult(RESULT_OK,intent);
                                         finish();
                                         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);

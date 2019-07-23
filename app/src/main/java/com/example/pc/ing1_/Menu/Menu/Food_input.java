@@ -1,6 +1,7 @@
 package com.example.pc.ing1_.Menu.Menu;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -105,8 +106,9 @@ public class Food_input extends AppCompatActivity {
                         public void item_click(View v, int position) {
                             Intent intent=new Intent(getApplicationContext(),Food_Info_Activity.class);
                             intent.putExtra("food_name",food_list_items.get(position).getName());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                            startActivity(intent);
+
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                            startActivityForResult(intent,200);
 
                         }
                     });
@@ -136,5 +138,17 @@ public class Food_input extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+       if(resultCode==RESULT_OK){
+           if(requestCode==200) {
+               Intent intent = new Intent();
+               intent.putExtra("이름", data.getSerializableExtra("이름"));
+               setResult(RESULT_OK,intent);
+               finish();
+           }
+       }
     }
 }

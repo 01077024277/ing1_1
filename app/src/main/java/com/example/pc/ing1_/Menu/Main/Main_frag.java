@@ -60,14 +60,26 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import com.liaoinstan.springview.widget.SpringView;
+import com.odsay.odsayandroidsdk.API;
+import com.odsay.odsayandroidsdk.ODsayData;
+import com.odsay.odsayandroidsdk.ODsayService;
+import com.odsay.odsayandroidsdk.OnResultCallbackListener;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -97,7 +109,7 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
     List<Store> store;
     GoogleMap googleMap;
     long start, end;
-    RetrofitExService http;
+    RetrofitExService http,naver_http;
     double user_lon, user_lat;
     private String htmlPageUrl = "https://Store.naver.com/restaurants/list?entry=pll&filterId=r09590&page=";
     Location location;
@@ -116,7 +128,6 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
 //    SwipyRefreshLayout swipe;
     SpringView swipe;
     int max;
-
 
 //    MapWrapperLayout mapWrapperLayout;
 //    MapFragment mapFragment;
@@ -143,7 +154,7 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
         google_map.onCreate(savedInstanceState);
         google_map.getMapAsync(this);
         radioGroup = view.findViewById(R.id.radio_group);
-        radioGroup.setVisibility(View.GONE);
+        radioGroup.setVisibility(View.VISIBLE);
         review_count = view.findViewById(R.id.review_count);
         star_rating = view.findViewById(R.id.star_rating);
         review_count.setChecked(true);
@@ -178,6 +189,7 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
 
 
 
+
         http = new Retrofit.Builder().baseUrl(RetrofitExService.url).addConverterFactory(GsonConverterFactory.create()).build().create(RetrofitExService.class);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,14 +209,7 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
             }
 
         });
-//        star_rating.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Store_search(1,0);
-//                if()
-//
-//            }
-//        });
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -214,13 +219,12 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
             }
         });
 
-//        review_count.setOnClickListener(new View.OnClickListener() {
-//            @Override
+//        review_count.setOnClickListener(new View.OnClickListener() {//            @Override
 //            public void onClick(View v) {
 //                Store_search(0,0);
 //
 //
-//
+
 //            }
 //        });
 
@@ -229,23 +233,6 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
 
 
 
-
-//        this.infoWindow = (ViewGroup) getLayoutInflater().inflate(R.layout.info__window, null);
-
-//        this.infoTitle = (TextView) infoWindow.findViewById(R.id.title);
-//        this.infoSnippet = (TextView) infoWindow.findViewById(R.id.snippet);
-//        this.infoButton = (Button) infoWindow.findViewById(R.id.button);
-
-        // Setting custom OnTouchListener which deals with the pressed state
-        // so it shows up
-//        this.infoButtonListener = new OnInfoWindowElemTouchListener(infoButton,getContext()) {
-//            @Override
-//            protected void onClickConfirmed(View v, Marker marker) {
-//                 Here we can perform some action triggered after clicking the button
-//                Toast.makeText(getContext(), marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
-//            }
-//        };
-//        this.infoButton.setOnTouchListener(infoButtonListener);
 
 
 
@@ -260,6 +247,10 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         one = true;
         Log.d("선언", "cre");
+
+
+
+
 
 
         LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -314,6 +305,7 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
     }
 
 
+
     @Override
     public void onResume() {
         google_map.onResume();
@@ -346,6 +338,18 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
 // Updates the location and zoom of the MapView
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 //        user_lat = location.getLatitude();
 //        user_lon = location.getLongitude();
         user_lat=37.486471;
@@ -355,11 +359,11 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
                 .position(new LatLng(user_lat, user_lon))
                 .title("현재위치")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-        CircleOptions circle500m = new CircleOptions().center(new LatLng(user_lat, user_lon))
-                .radius(500).strokeWidth(0f).fillColor(Color.parseColor("#500000ff"));
+        CircleOptions circle3000m = new CircleOptions().center(new LatLng(user_lat, user_lon))
+                .radius(3000).strokeWidth(0f).fillColor(Color.parseColor("#500000ff"));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(user_lat, user_lon), 16);
 //        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(37.4834775,126.9748299), 15);
-        this.googleMap.addCircle(circle500m);
+        this.googleMap.addCircle(circle3000m);
         this.googleMap.animateCamera(cameraUpdate);
         Geocoder geocoder = new Geocoder(getContext());
         try {
@@ -418,6 +422,8 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
                     for (int i = 0; i < store.size(); i++) {
                         if (marker.getPosition().equals(new LatLng(Double.parseDouble(store.get(i).getLat()), Double.parseDouble(store.get(i).getLon())))) {
                             Intent intent = new Intent(getContext(), Store_info_Activity.class);
+                            intent.putExtra("lat",user_lat);
+                            intent.putExtra("lon",user_lon);
                             intent.putExtra("store", store.get(i));
                             startActivity(intent);
                         }
@@ -450,6 +456,13 @@ public class Main_frag extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        bitmapList = new HashMap<>();
+        review_count.setChecked(true);
+        Store_search(0,0);
+
+        clusterManager.clearItems();
+
+        swipe.setFooter(new DefaultFooter(getContext(),R.drawable.progress_small));
 
     }
 
@@ -543,7 +556,7 @@ return null;
 //                }
 //            }
                 LatLng latLng = new LatLng(Double.parseDouble(store.getLat()), Double.parseDouble(store.getLon()));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 22));
                 cluster_lan = latLng;
 
             }
@@ -677,8 +690,18 @@ return null;
 
 //                        clusterManager.setOnClusterItemInfoWindowClickListener((ClusterManager.OnClusterItemInfoWindowClickListener<Cluster_Item>) getContext());
                 for (int i = 0; i < s.size(); i++) {
+                    if(s.get(i).getOpen_day()==null){
+                        s.get(i).setOpen_day("");
+                    }
+                    if(s.get(i).getClose_day()==null){
+                        s.get(i).setClose_day("");
+                    }
+                    if(s.get(i).getTime()==null){
+                        s.get(i).setTime("");
+                    }
+
                     store.add(s.get(i));
-                    Log.d("음식점 이름", i + "        " + s.get(i).getName() + "     " + s.get(i).getStore_img() + "   " + s.get(i).getLat() + "   " + s.get(i).getLon());
+                    Log.d("음식점 이름", i + "        " + s.get(i).getName() + "     " + s.get(i).getStore_img() + "   " + s.get(i).getLat() + "   " + s.get(i).getLon()+" "+s.get(i).getOpen_day());
 
 
                     final int finalI = i;

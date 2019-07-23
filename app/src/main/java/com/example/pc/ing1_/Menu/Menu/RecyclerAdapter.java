@@ -4,10 +4,10 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,21 +23,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pc.ing1_.R;
-import com.example.pc.ing1_.aaa.MainActivity;
-
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
-import fr.ganfra.materialspinner.MaterialSpinner;
 
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
     int aa=-1;
     int wlr=-1;
+    Food_info2 size;
     // adapter에 들어갈 list 입니다.
 //    private ArrayList<Data> listData = new ArrayList<>();
     private ArrayList<Food_info> food_infos= new ArrayList<>();
@@ -48,13 +42,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     private int prePosition = -1;
     public Itemclick Click;
     public interface Itemclick{
-        public void onClick(View v,int Position,String title,int size,double cal,double carb,double protein,double fat,double chol,double fiber,double salt,double protass);
+        public void onClick(View v,int position,Food_info2 food_info2);
 
     }
     public void  ButtonClick(Itemclick itemclick){
         this.Click=itemclick;
     }
 
+    public RecyclerAdapter(Food_info2 size){
+        this.size=size;
+    }
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -85,7 +82,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     // RecyclerView의 핵심인 ViewHolder 입니다.
     // 여기서 subView를 setting 해줍니다.
     class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+        double thtn;
         private LinearLayout linearLayout;
         private TextView textView1;
         private TextView g,textView2,info,cal,git1,git2,git3,git4,git5,git6,git7;
@@ -104,9 +101,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
         ItemViewHolder(View itemView) {
             super(itemView);
             button=itemView.findViewById(R.id.button);
-            textView1 = itemView.findViewById(R.id.textView1);
+            textView1 = itemView.findViewById(R.id.textView_carb);
             linearLayout=itemView.findViewById(R.id.linearItem);
-            textView2 = itemView.findViewById(R.id.textView2);
+            textView2 = itemView.findViewById(R.id.textView_fat);
             niceSpinner=itemView.findViewById(R.id.num);
             info=itemView.findViewById(R.id.info);
                 imageView1 = itemView.findViewById(R.id.imageView1);
@@ -125,8 +122,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
         }
 
         void onBind(Food_info data1, final int position) {
+            thtn=0;
             this.data = data1;
             this.position = position;
+
+
+
+
+
             ArrayList<String> arrayList= new ArrayList<>();
             for(int i=1;i<11;i++){
                 arrayList.add(i+" 회");
@@ -147,11 +150,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
                 imageView1.setImageResource(R.drawable.caret_down);
             }
 //            info.setText("1회 제공량 : "+data.getNum()+data.getSize()+"당 "+(int)data.getCal()+"kcal");
-            if(position!=wlr&&!data.getSize().contains("g")&&!data.getSize().contains("ml")){
+            //사이즈에 g이나 ml 표현이 없다면 만들어준다
+            if(position!=wlr&&!data.getSize().contains("g")&&!data.getSize().contains("ml")&&wlr!=-1){
                 niceSpinner.setVisibility(View.VISIBLE);
                 ArrayAdapter spinnerAdapter = new ArrayAdapter(context,R.layout.support_simple_spinner_dropdown_item,arrayList);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-                final double thtn = Math.round((food_infos.get(position).getCal()/food_infos.get(wlr).getCal())*100)/100.0;
+
+                 thtn = Math.round(food_infos.get(position).getCal()/food_infos.get(wlr).getCal()*100)/100.0;
                 niceSpinner.setAdapter(spinnerAdapter);
                 info.setText("1회 제공량 : "+data.getNum()+data.getSize()+"당  "+(int)data.getCal()+"kcal");
 //                info.append("   약("+Math.round((food_infos.get(position).getCal()/food_infos.get(wlr)ㅊ.getCal())*100)/100.0+"g)");
@@ -169,7 +174,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         int no = position+1;
-                        cal.setText(""+(no*(int)data.getCal())+"kcal"+" 약 ( "+(no*thtn)+" g)");
+                        cal.setText(""+(no*(int)data.getCal())+"kcal"+" 약 ( "+(Math.round(no*thtn*100)/100.0)+" g)");
                         git1.setText("단백질 : "+Math.round(data.getProtein()*no*100)/100.0+"g");
                         git2.setText("탄수화물 : "+Math.round(data.getCarb()*no*100)/100.0+"g");
                         git3.setText("지방 : "+Math.round(data.getFat()*no*100)/100.0+"g");
@@ -227,9 +232,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 
 
 
-            }else{
-                final double thtn = Math.round(data.getCal()*100)/100.0;
-                info.setText("1회 제공량 : "+data.getNum()+data.getSize()+"당  "+(Math.round(data.getCal()*100)/100.0)+"kcal");
+            }
+            //직접 입력일때
+            else{
+                 thtn = Math.round(data.getCal()*100)/100.0;
+
+                info.setText("1회 제공량 : "+data.getNum()+"g당  "+(Math.round(data.getCal()*100)/100.0)+"kcal");
                 cal.setText(""+thtn+"kcal");
                 niceSpinner.setVisibility(View.GONE);
                 g.setVisibility(View.VISIBLE);
@@ -284,33 +292,86 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
                 public void onClick(View v) {
                     if(Click!=null){
                         if(niceSpinner.getVisibility()==View.VISIBLE) {
-                            Click.onClick(v, position, "" + textView1.getText().toString(),
-                                    niceSpinner.getSelectedItemPosition()+1,
-                                    Double.parseDouble(cal.getText().toString().split("k")[0]),
-                                    Double.parseDouble(git1.getText().toString().split("단백질 : ")[1].split("g")[0]),
-                                    Double.parseDouble(git2.getText().toString().split("탄수화물 : ")[1].split("g")[0]),
-                                    Double.parseDouble(git3.getText().toString().split("지방 : ")[1].split("g")[0]),
-                                    Double.parseDouble(git4.getText().toString().split("콜레스테롤 : ")[1].split("mg")[0]),
-                                    Double.parseDouble(git5.getText().toString().split("식이섬유 : ")[1].split("g")[0]),
-                                    Double.parseDouble(git6.getText().toString().split("나트륨 : ")[1].split("mg")[0]),
-                                    Double.parseDouble(git7.getText().toString().split("칼륨 : ")[1].split("mg")[0])
-                            );
-                        }else{
-                            Click.onClick(v, position, "" + textView1.getText().toString(),
-                                    Integer.parseInt(editText.getText().toString()),
-                                    Double.parseDouble(cal.getText().toString().split("k")[0]),
-                                    Double.parseDouble(git1.getText().toString().split("단백질 : ")[1].split("g")[0]),
-                                    Double.parseDouble(git2.getText().toString().split("탄수화물 : ")[1].split("g")[0]),
-                                    Double.parseDouble(git3.getText().toString().split("지방 : ")[1].split("g")[0]),
-                                    Double.parseDouble(git4.getText().toString().split("콜레스테롤 : ")[1].split("mg")[0]),
-                                    Double.parseDouble(git5.getText().toString().split("식이섬유 : ")[1].split("g")[0]),
-                                    Double.parseDouble(git6.getText().toString().split("나트륨 : ")[1].split("mg")[0]),
-                                    Double.parseDouble(git7.getText().toString().split("칼륨 : ")[1].split("mg")[0])
-                            );
+                            Click.onClick(v, position, new Food_info2(niceSpinner.getSelectedItemPosition()+1,thtn,data));
+                        }else if (niceSpinner.getVisibility()==View.GONE){
+                            if(editText.getText().toString().equals("")||editText.getText().toString().equals("0")){
+                                Toast.makeText(context,"공백 or 0 ",Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Click.onClick(v, position, new Food_info2(Integer.parseInt(editText.getText().toString()), 0,
+//                                        new Food_info(data.getName(),
+//                                                "직접입력",
+//                                                Integer.parseInt(editText.getText().toString()),
+//                                                Double.parseDouble(cal.getText().toString().split("k")[0]),
+//                                                Double.parseDouble(git1.getText().toString().split("단백질 : ")[1].split("g")[0]),
+//                                                Double.parseDouble(git2.getText().toString().split("탄수화물 : ")[1].split("g")[0]),
+//                                                Double.parseDouble(git3.getText().toString().split("지방 : ")[1].split("g")[0]),
+//                                                Double.parseDouble(git4.getText().toString().split("콜레스테롤 : ")[1].split("mg")[0]),
+//                                                Double.parseDouble(git5.getText().toString().split("식이섬유 : ")[1].split("g")[0]),
+//                                                Double.parseDouble(git6.getText().toString().split("나트륨 : ")[1].split("mg")[0]),
+//                                                Double.parseDouble(git7.getText().toString().split("칼륨 : ")[1].split("mg")[0])
+//                                        ))
+                                        data)
+                                );
+                            }
                         }
                     }
                 }
             });
+
+
+
+            if(size!=null) {
+                Log.d("어댑터1",size.getFood_info().getSize()+"");
+                Log.d("어댑터 데이터",data.getSize()+"");
+                if(data.getSize().toString().equals(size.getFood_info().getSize().toString())&&data.getNum()==size.getFood_info().getNum()&&(size.getFood_info().getNum()==1&&(size.getFood_info().getSize().toString().equals("g")||size.getFood_info().getSize().toString().equals("ml")))){
+                    selectedItems.put(position, true);
+//                if (prePosition != -1) notifyItemChanged(prePosition);
+//                notifyItemChanged(position);
+                    // 클릭된 position 저장
+                    prePosition = position;
+//                    niceSpinner.setSelection(size.getNum()-1);
+                    editText.setText(size.getNum()+"");
+                    size=null;
+                }
+
+                else if (data.getSize().equals(size.getFood_info().getSize())&&!size.getFood_info().getSize().equals("직접입력")&&editText.getVisibility()==View.GONE) {
+                    selectedItems.put(position, true);
+//                if (prePosition != -1) notifyItemChanged(prePosition);
+//                notifyItemChanged(position);
+                    // 클릭된 position 저장
+                    prePosition = position;
+                    niceSpinner.setSelection(size.getNum()-1);
+//                    editText.setText(size.getNum()+"");
+
+                    size=null;
+               }
+// else if(size.getFood_info().getSize().equals("직접입력")&&editText.getVisibility()==View.VISIBLE){
+//                    selectedItems.put(position, true);
+////                if (prePosition != -1) notifyItemChanged(prePosition);
+////                notifyItemChanged(position);
+//                    // 클릭된 position 저장
+//                    prePosition = position;
+////                    niceSpinner.setSelection(size.getNum()-1);
+//                    editText.setText(size.getNum()+"");
+//                    size=null;
+//                }
+//                else if (size.getFood_info().getSize().equals("직접입력")&&editText.getVisibility()==View.VISIBLE){
+//                    selectedItems.put(position, true);
+////                if (prePosition != -1) notifyItemChanged(prePosition);
+////                notifyItemChanged(position);
+//                    // 클릭된 position 저장
+//                    prePosition = position;
+//                    niceSpinner.setSelection(size.getNum()-1);
+//                    editText.setText(size.getNum()+"");
+//                    size=null;
+//                }
+            }
+
+
+
+
+
 
             changeVisibility(selectedItems.get(position));
 
@@ -321,13 +382,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 //            imageView1.setOnClickListener(this);
 //            imageView2.setOnClickListener(this);
 
+
+
+
+
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.linearItem:
-
                     if (selectedItems.get(position)) {
                         // 펼쳐진 Item을 클릭 시
                         selectedItems.delete(position);
@@ -398,4 +462,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
             va.start();
         }
     }
+
+
 }

@@ -1,30 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/rr"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rr"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="110dp"
     android:background="@drawable/border_black">
 
     <TextView
         android:id="@+id/day"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <ImageView
         android:id="@+id/plus"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_below="@+id/day"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="14dp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="5dp"
+
+
         android:src="@drawable/plus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+         />
+    <TextView
+        android:id="@+id/carb"
+        android:layout_width="wrap_content"
+        android:text="탄"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@id/carb_info"
+        android:textSize="8dp"
+        android:visibility="gone"
+        />
+    <TextView
+        android:id="@+id/carb_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="8dp"
+
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/protein"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="단"
+        android:layout_below="@+id/carb"
+        android:layout_marginTop="8dp"
+        android:textSize="8dp"
+        android:layout_toLeftOf="@id/protein_info"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/protein_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/carb_info"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/fat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="지"
+        android:textSize="8dp"
+        android:layout_below="@+id/protein"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@id/protein_info"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/fat_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="8dp"
+        android:layout_below="@id/protein_info"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/cal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textSize="8dp"
+        android:text="칼"
+        android:layout_below="@+id/fat"
+        android:layout_toLeftOf="@id/cal_info"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/cal_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/fat_info"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"/>
 
 </RelativeLayout>

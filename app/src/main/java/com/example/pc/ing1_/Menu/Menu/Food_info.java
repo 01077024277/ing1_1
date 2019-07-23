@@ -1,9 +1,13 @@
 package com.example.pc.ing1_.Menu.Menu;
 
-public class Food_info{
+import java.io.Serializable;
+
+public class Food_info implements Serializable {
     String name,size;
     int num;
     double cal,carb,protein,fat,chol,fiber,salt,potass;
+
+
 
     public Food_info(String name, String size, int num, double cal, double carb, double protein, double fat, double chol, double fiber, double salt, double potass) {
         this.name = name;
@@ -18,6 +22,8 @@ public class Food_info{
         this.salt = salt;
         this.potass = potass;
     }
+
+
 
     public int getNum() {
         return num;

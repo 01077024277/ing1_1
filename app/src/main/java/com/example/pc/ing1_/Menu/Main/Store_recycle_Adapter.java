@@ -94,10 +94,10 @@ public class Store_recycle_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
                 ((ViewHolder_) viewHolder).textView.setTextSize(30f);
             }
             if (!store_item.get(i).getStore_img().equals("")) {
-                Glide.with(context).load(store_item.get(i).getStore_img()).error(R.drawable.no_image).override(150, 150).centerCrop().into(((ViewHolder_) viewHolder).imageView);
+                Glide.with(context).load(store_item.get(i).getStore_img()).error(R.drawable.no_image).centerCrop().thumbnail(0.1f).into(((ViewHolder_) viewHolder).imageView);
 
             } else {
-                Glide.with(context).load(R.drawable.no_image).error(R.drawable.no_image).override(150, 150).centerCrop().into(((ViewHolder_) viewHolder).imageView);
+                Glide.with(context).load(R.drawable.no_image).error(R.drawable.no_image).centerCrop().thumbnail(0.1f).into(((ViewHolder_) viewHolder).imageView);
 
             }
 

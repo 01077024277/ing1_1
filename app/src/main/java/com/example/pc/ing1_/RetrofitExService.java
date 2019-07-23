@@ -1,10 +1,15 @@
 package com.example.pc.ing1_;
 
+import com.example.pc.ing1_.Login.Hash;
 import com.example.pc.ing1_.Menu.Menu.Food_Item;
 import com.example.pc.ing1_.Menu.Menu.Food_info;
+import com.example.pc.ing1_.Menu.Menu.Food_info2;
 import com.example.pc.ing1_.Menu.Menu.Food_input;
 import com.example.pc.ing1_.Menu.Menu.Food_list_item;
 import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -20,10 +25,13 @@ import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
@@ -73,9 +81,8 @@ public interface RetrofitExService {
     @GET
     Call<ResponseBody> getProfile(@Url String url);
 
-    @FormUrlEncoded
-    @POST("/User/userinfo.php")
-    Call<User>  userinfo(@Field("id") String id);
+    @GET("/User/userinfo.php")
+    Call<User>  userinfo(@Query("id") String id);
 
     @FormUrlEncoded
     @POST("/Login/naver_login.php")
@@ -125,7 +132,43 @@ public interface RetrofitExService {
     Call<ResponseBody> food_match_max(@Query("value") String a);
     @GET("/food_one.php")
     Call<List<Food_info>> food_one(@Query("food_name") String a);
+    @GET("/schedule.php")
+    Call<ResponseBody> schedule(@Query("aa")JSONObject a);
+    @GET("/schedule_list.php")
+    Call<ArrayList<Food_info2>> schedule_list(@QueryMap HashMap<String,String> a);
 
+    @GET("/schedule_cal.php")
+    Call<ResponseBody> schedule_cal(@QueryMap HashMap<String,String> a);
+
+
+
+
+    @Headers({
+            "X-NCP-APIGW-API-KEY-ID: idp7ne510b",
+            "X-NCP-APIGW-API-KEY: Y2W1fJRKsbm8lVm7cdpfuLnoQR4tb1qyzCVhi3ZZ"
+    })
+    @GET("/map-direction/v1/driving")
+    Call<ResponseBody> qwqw (@QueryMap HashMap<String,String> a);
+
+    @GET("ex/ex.php")
+    Call<ResponseBody> ex (@QueryMap HashMap<String,String> a);
+    @GET("ex/other_recommend.php")
+    Call<ResponseBody> recommend (@QueryMap HashMap<String,String> a);
+
+
+    @Headers({
+            "Accept: application/json",
+            "appkey: 028e4e8a-ba76-43bf-b13a-e28f42140efa",
+            "Host: api2.sktelecom.com",
+            "Accept-Language: ko",
+            "Content-Type: application/x-www-form-urlencoded"
+
+            })
+    @FormUrlEncoded
+//    @POST("/tmap/routes/pedestrian?version=1&startX={startX}&startY={startY}&endX={endX}endY={endY}&startName=%EC%B6%9C%EB%B0%9C&endName=%EB%B3%B8%EC%82%AC")
+    @POST("/tmap/routes/pedestrian")
+    Call<JsonObject> tmap(@FieldMap HashMap<String,String> aa );
+//    Call<JsonObject> tmap(@Path("startX") String startX,@Path("startY") String startY,@Path("endX") String endX,@Path("endY") String endY);
 
 }
 

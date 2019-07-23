@@ -40,7 +40,7 @@ public class Sign_1_agree_Activity extends AppCompatActivity {
         final String name =getIntent().getStringExtra("name");
         String dustmq = getIntent().getStringExtra("qwe");
 
-            next=findViewById(R.id.textView3);
+            next=findViewById(R.id.textView_pro);
 
             c1=findViewById(R.id.checkBox);
             c4=findViewById(R.id.checkBox4);

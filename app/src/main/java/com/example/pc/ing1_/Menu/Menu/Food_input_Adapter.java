@@ -85,7 +85,7 @@ public class Food_input_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
         final int pos=i;
-        Log.d("리사이클러뷰","뷰홀다");
+        Log.d("리사이클러뷰","뷰홀더");
 
         if (viewHolder instanceof Food_input_ViewHoler_F) {
             ((Food_input_ViewHoler_F)viewHolder).food_name.setVisibility(View.GONE);

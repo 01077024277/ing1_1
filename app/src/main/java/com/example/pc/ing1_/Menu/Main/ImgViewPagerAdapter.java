@@ -40,10 +40,11 @@ public class ImgViewPagerAdapter extends PagerAdapter {
         ImageView imageView = view.findViewById(R.id.img);
         TextView textView = view.findViewById(R.id.content);
         Glide.with(context).load(imglist.get(position)).centerCrop().into(imageView);
-        Log.d("qweqwe", "" + imglist.get(position) + "   " + contentlist.get(position).toString());
+//        Log.d("qweqwe", "" + imglist.get(position) + "   " + contentlist.get(position).toString());
 
-        textView.setText(contentlist.get(position).toString());
-
+        if(contentlist!=null) {
+            textView.setText(contentlist.get(position).toString());
+        }
 
         container.addView(view);
         return view;

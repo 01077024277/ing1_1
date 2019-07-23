@@ -61,11 +61,11 @@ public class Cluster_recycle_adapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         final int position=i;
         if(!stores.get(i).getStore_img().equals("")){
-            Glide.with(context).load(stores.get(i).getStore_img()).override(80,80).into(((ViewHolder_Cluster)viewHolder).imageView);
+            Glide.with(context).load(stores.get(i).getStore_img()).thumbnail(0.2f).override(80,80).into(((ViewHolder_Cluster)viewHolder).imageView);
 
         }
         else {
-            Glide.with(context).load(R.drawable.no_image).override(80,80).into(((ViewHolder_Cluster)viewHolder).imageView);
+            Glide.with(context).load(R.drawable.no_image).thumbnail(0.2f).override(80,80).into(((ViewHolder_Cluster)viewHolder).imageView);
 
         }
         if(stores.get(i).getName().length()>=15){

@@ -33,7 +33,7 @@ import com.bumptech.glide.Glide;
 import com.example.pc.ing1_.Login.Login_Activity;
 import com.example.pc.ing1_.Menu.BlankFragment;
 import com.example.pc.ing1_.Menu.Main.Main_frag;
-import com.example.pc.ing1_.Menu.Menu.Menu_Activity;
+
 import com.example.pc.ing1_.Menu.Menu.Menu_Activity2;
 import com.example.pc.ing1_.Sign.Sign_4_profile;
 
@@ -84,7 +84,9 @@ RetrofitExService http;
 
         fragmentTransaction.replace(R.id.frag,new Main_frag());
         fragmentTransaction.commit();
-
+        sign_button.setVisibility(View.VISIBLE);
+        profile_change.setVisibility(View.GONE);
+        imageView.setVisibility(View.GONE);
 //        final Intent intent=getIntent();
 //        id=intent.getStringExtra("id");
 //        social=intent.getStringExtra("social");
@@ -117,9 +119,7 @@ RetrofitExService http;
 
 //        Login(1);
 
-        sign_button.setVisibility(View.VISIBLE);
-        profile_change.setVisibility(View.GONE);
-        imageView.setVisibility(View.GONE);
+
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,8 +241,14 @@ RetrofitExService http;
 
         } else if (id == R.id.nav_slideshow) {
 //            Intent intent =new Intent(getApplicationContext(),Menu_Activity.class);
-            Intent intent =new Intent(getApplicationContext(),Menu_Activity2.class);
-            startActivity(intent);
+            if("".equals(sf.getString("phone",""))){
+                Toast.makeText(getApplicationContext(),"로그인을 해주세요",Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Intent intent =new Intent(getApplicationContext(),Menu_Activity2.class);
+                startActivity(intent);
+
+            }
 
         } else if (id == R.id.nav_manage) {
 
@@ -256,13 +262,15 @@ RetrofitExService http;
             profile_change.setVisibility(View.GONE);
 //            item.setChecked(false);
             item.setVisible(false);
-            sd.putString("id","");
-            sd.putString("social","");
-            sd.putString("height","");
-            sd.putString("weight","");
-            sd.putString("gender","");
-            sd.putString("age","");
-            sd.putString("no","");
+//            sd.putString("id","");
+//            sd.putString("social","");
+//            sd.putString("height","");
+//            sd.putString("weight","");
+//            sd.putString("gender","");
+//            sd.putString("age","");
+//            sd.putString("no","");
+//            sd.putString("phone","");
+            sd.clear();
             sd.commit();
 
         }
@@ -332,7 +340,9 @@ RetrofitExService http;
         //로그인이 되었다면
         final int result;
         result=i;
+
         if(id!=null){
+            Log.d("왜",id);
             sign_button.setVisibility(View.GONE);
             imageView.setVisibility(View.VISIBLE);
             profile_change.setVisibility(View.VISIBLE);
@@ -345,10 +355,18 @@ RetrofitExService http;
                     sd.putString("height",login_user.getHeight());
                     sd.putString("weight",login_user.getWeight());
                     sd.putString("no", String.valueOf(login_user.getNo()));
+                    sd.putString("id",id);
+                    sd.putString("social",null);
                     sd.commit();
                     name.setText(login_user.getName());
                     Log.d("프로필",login_user.getProfile());
                     //프로필이 없으면 기본 이미지
+                    if(login_user==null){
+                        Log.d("왜","null");
+                    }
+                    if(login_user.getProfile()=="null"){
+                        Log.d("왜","null");
+                    }
                     if (login_user.getProfile().equals("")) {
                         Glide.with(getApplicationContext()).load(R.drawable.user).into(imageView);
 
@@ -381,6 +399,8 @@ RetrofitExService http;
             });
 
         }else{
+            Log.d("왜2",id);
+
             sign_button.setVisibility(View.VISIBLE);
             profile_change.setVisibility(View.GONE);
             imageView.setVisibility(View.GONE);

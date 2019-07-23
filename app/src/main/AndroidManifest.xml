@@ -57,7 +57,13 @@
         <activity android:name=".Menu.Menu.Menu_Activity2" />
         <activity android:name=".Menu.Menu.Food_input" />
         <activity android:name=".Menu.Menu.Food_Info_Activity" />
-        <activity android:name=".Menu.Menu.Schedule"></activity>
+        <activity android:name=".Menu.Menu.Schedule_Activity" />
+        <activity android:name=".Menu.Main.Directions_Activity" />
+        <activity android:name=".Menu.Menu.Recommend_Activity" />
+        <activity
+            android:name=".Menu.Menu.Recommend_select_Activity"
+            android:theme="@style/Theme.MyDialog" />
+        <activity android:name=".Menu.Main.Store_recommend_Activity"></activity>
     </application>
 
 </manifest>
