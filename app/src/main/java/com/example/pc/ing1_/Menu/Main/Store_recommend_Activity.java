@@ -13,3 +13,4 @@ public class Store_recommend_Activity extends AppCompatActivity {
         setContentView(R.layout.store_recommend_activity);
     }
 }
+ 
