@@ -1,6 +1,9 @@
 package com.example.pc.ing1_;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,6 +35,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.pc.ing1_.Login.Login_Activity;
 import com.example.pc.ing1_.Menu.BlankFragment;
+import com.example.pc.ing1_.Menu.Friend.Main_Friend_Acitivity;
+import com.example.pc.ing1_.Menu.Friend.Socket_Service;
 import com.example.pc.ing1_.Menu.Main.Main_frag;
 
 import com.example.pc.ing1_.Menu.Menu.Menu_Activity2;
@@ -73,6 +78,7 @@ RetrofitExService http;
         sf = getSharedPreferences("login",MODE_PRIVATE);
         sd=sf.edit();
 
+
         fragmentManager=getSupportFragmentManager();
         fragmentTransaction=fragmentManager.beginTransaction();
 
@@ -90,9 +96,12 @@ RetrofitExService http;
 //        final Intent intent=getIntent();
 //        id=intent.getStringExtra("id");
 //        social=intent.getStringExtra("social");
+
         if(!sf.getString("id","").equals("")){
            id=sf.getString("id","");
            if(!sf.getString("social","").equals("")){
+               Log.d("소셜ㄹㄹㄹ",sf.getString("social",""));
+
                social=sf.getString("social",null);
                Social_Login(social,id,1);
            }else{
@@ -250,7 +259,9 @@ RetrofitExService http;
 
             }
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_friend) {
+            Intent intent =new Intent(getApplicationContext(), Main_Friend_Acitivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 
@@ -271,7 +282,14 @@ RetrofitExService http;
 //            sd.putString("no","");
 //            sd.putString("phone","");
             sd.clear();
+            social=null;
             sd.commit();
+            sf = getSharedPreferences("login",MODE_PRIVATE);
+            Intent intent = new Intent(
+                    getApplicationContext(),//현재제어권자
+                    Socket_Service.class); // 이동할 컴포넌트
+            stopService(intent);
+
 
         }
 
@@ -340,7 +358,7 @@ RetrofitExService http;
         //로그인이 되었다면
         final int result;
         result=i;
-
+Log.d("서비스","로그인");
         if(id!=null){
             Log.d("왜",id);
             sign_button.setVisibility(View.GONE);
@@ -356,8 +374,18 @@ RetrofitExService http;
                     sd.putString("weight",login_user.getWeight());
                     sd.putString("no", String.valueOf(login_user.getNo()));
                     sd.putString("id",id);
+                    sd.putString("profile",login_user.getProfile());
+                    sd.putString("nick",login_user.getName());
                     sd.putString("social",null);
                     sd.commit();
+//                    Socket_Service socket_service=new Socket_Service(String.valueOf(login_user.getNo()));
+                    if(isServiceRunning()==false) {
+                        Intent service = new Intent(getApplicationContext(), Socket_Service.class);
+                        service.putExtra("no", String.valueOf(login_user.getNo()));
+
+                        startService(service);
+
+                    }
                     name.setText(login_user.getName());
                     Log.d("프로필",login_user.getProfile());
                     //프로필이 없으면 기본 이미지
@@ -498,8 +526,16 @@ RetrofitExService http;
                             sd.putString("height",login_user.getHeight());
                             sd.putString("weight",login_user.getWeight());
                             sd.putString("no", String.valueOf(login_user.getNo()));
-
+                            sd.putString("profile",login_user.getProfile());
+                            sd.putString("nick",login_user.getName());
                             sd.commit();
+                            if(isServiceRunning()==false) {
+                                Intent service = new Intent(getApplicationContext(), Socket_Service.class);
+                                service.putExtra("no", String.valueOf(login_user.getNo()));
+
+                                startService(service);
+
+                            }
                             Log.d("프로필",login_user.getUid());
                             //프로필이 없으면 기본 이미지
                             if (login_user.getProfile().equals("")) {
@@ -553,8 +589,16 @@ RetrofitExService http;
                     sd.putString("height",login_user.getHeight());
                     sd.putString("weight",login_user.getWeight());
                     sd.putString("no", String.valueOf(login_user.getNo()));
-
+                    sd.putString("profile",login_user.getProfile());
+                    sd.putString("nick",login_user.getName());
                     sd.commit();
+                    if(isServiceRunning()==false) {
+                        Intent service = new Intent(getApplicationContext(), Socket_Service.class);
+                        service.putExtra("no", String.valueOf(login_user.getNo()));
+
+                        startService(service);
+
+                    }
                     name.setText(login_user.getName());
                     Log.d("프로필",login_user.getUid());
                     //프로필이 없으면 기본 이미지
@@ -595,5 +639,16 @@ RetrofitExService http;
     protected void onResume() {
         super.onResume();
 
+    }
+    public boolean isServiceRunning()
+    {
+        ActivityManager manager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if (Socket_Service.class.getName().equals(service.service.getClassName()))
+                return true;
+        }
+        return false;
     }
 }

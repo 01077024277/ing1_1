@@ -1,9 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Menu.Main.Store_recommend_Activity">
 
-</android.support.constraint.ConstraintLayout>
+    <!-- TODO: Update blank fragment layout -->
+    <com.google.android.gms.maps.MapView
+
+        android:id="@+id/google_map"
+        android:layout_width="match_parent"
+        android:layout_height="550dp" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginLeft="150dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="음식 검색"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editText"
+        android:layout_alignRight="@+id/editText"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="-141dp"
+        android:layout_marginRight="-141dp"
+        android:text="검색"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editText" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_below="@id/google_map"
+        android:layout_alignParentRight="true"
+
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/review_count"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:text="거리순" />
+
+        <RadioButton
+            android:id="@+id/star_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/radio_group"
+            android:text="리뷰순" />
+
+    </RadioGroup>
+
+
+    <!--<com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout-->
+    <!--android:id="@+id/swipe"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_below="@+id/radio_group"-->
+    <!--app:srl_direction="bottom"-->
+    <!--&gt;-->
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/recycle"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+
+    <!--android:layout_marginStart="0dp"-->
+    <!--android:layout_marginLeft="0dp"-->
+    <!--android:layout_marginBottom="0dp" />-->
+    <!--</com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>-->
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/radio_group"
+        app:srl_direction="bottom"
+        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginBottom="0dp" />
+    </com.liaoinstan.springview.widget.SpringView>
+
+</RelativeLayout>

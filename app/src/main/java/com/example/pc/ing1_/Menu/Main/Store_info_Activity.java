@@ -117,7 +117,7 @@ public class Store_info_Activity extends AppCompatActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 JsonObject object = response.body();
-
+                Log.d("리뷰아이템",object.toString());
                 JsonArray array = object.getAsJsonArray("rating");
                 JsonArray array1 = object.getAsJsonArray("menu");
                 for (int i = 0; i < array1.size(); i++) {
@@ -346,8 +346,26 @@ public class Store_info_Activity extends AppCompatActivity {
 
         call=findViewById(R.id.call);
         friend=findViewById(R.id.friend);
+
+        friend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+
+
         road=findViewById(R.id.road);
         info=findViewById(R.id.infoadd);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(getApplicationContext(),Question_activity.class);
+                intent.putExtra("store_id",store.getNo()+"");
+                intent.putExtra("store_name",store.getName()+"");
+                startActivity(intent);
+            }
+        });
 
 
         call.setOnClickListener(new View.OnClickListener() {

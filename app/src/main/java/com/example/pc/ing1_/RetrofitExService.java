@@ -1,6 +1,10 @@
 package com.example.pc.ing1_;
 
 import com.example.pc.ing1_.Login.Hash;
+import com.example.pc.ing1_.Menu.Friend.Message_model;
+import com.example.pc.ing1_.Menu.Friend.Room_Item;
+import com.example.pc.ing1_.Menu.Friend.Socket_Service;
+import com.example.pc.ing1_.Menu.Friend.multi_chat.Multi_Room_Item;
 import com.example.pc.ing1_.Menu.Menu.Food_Item;
 import com.example.pc.ing1_.Menu.Menu.Food_info;
 import com.example.pc.ing1_.Menu.Menu.Food_info2;
@@ -107,7 +111,6 @@ public interface RetrofitExService {
 
     @GET("Store_Info.php")
     Call<JsonObject> store_info(@Query("no") int no);
-    @GET("Store_Info.php")
 
 
 
@@ -170,5 +173,45 @@ public interface RetrofitExService {
     Call<JsonObject> tmap(@FieldMap HashMap<String,String> aa );
 //    Call<JsonObject> tmap(@Path("startX") String startX,@Path("startY") String startY,@Path("endX") String endX,@Path("endY") String endY);
 
+
+//음식점 추천
+    @GET("store_recommend.php")
+    Call <List<Store>> store_recommend (@QueryMap HashMap<String,String> aa);
+
+    //친구찾기
+    @GET("Friend_search.php")
+    Call<User> friend_search(@QueryMap HashMap<String,String> key);
+    //친구추가
+    @GET("Friend_add.php")
+    Call<ResponseBody> firend_add(@QueryMap HashMap<String,String> key);
+    //친구 목록 불러오기
+    @GET("Friend_list.php")
+    Call<ArrayList<User>> firend_list(@Query("key") String key);
+    //채팅방 불러오기
+    @GET("Room_list.php")
+    Call<ArrayList<Room_Item>> room_items(@QueryMap HashMap<String,String>  no);
+    //채팅방 접속시 채팅내역불러오기
+    @GET("Chat_list.php")
+    Call<ArrayList<Message_model>> chat_list(@QueryMap HashMap<String,String> no);
+    //유저 정보
+    @GET("User_class.php")
+    Call<User> user_class (@Query("no")String no);
+    //방나가기
+    @GET("Room_exit.php")
+    Call<ResponseBody> room_exit(@QueryMap HashMap<String,String> hashMap);
+
+    //멀티채팅 방번호
+    @GET("mul_room.php")
+    Call<ResponseBody> mul_room(@Query("no") String no);
+
+    //멀티채팅 리스트
+    @GET("mul_list.php")
+    Call<ArrayList<Multi_Room_Item>> mul_list(@Query("no") String no);
+    //멀티 채팅 목록
+    @GET("mul_chat_list.php")
+    Call<JsonObject> mul_chat(@QueryMap HashMap<String,String> no);
+    //멀티 채팅 나가기
+    @GET("mul_exit.php")
+    Call<ResponseBody> mul_exit(@QueryMap HashMap<String,String> hashMap );
 }
 

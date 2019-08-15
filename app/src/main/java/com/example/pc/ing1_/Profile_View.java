@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -38,7 +39,7 @@ public class Profile_View extends AppCompatActivity {
         Retrofit retrofit=new Retrofit.Builder().baseUrl(RetrofitExService.url).addConverterFactory(GsonConverterFactory.create()).build();
         http=retrofit.create(RetrofitExService.class);
         imageView = findViewById(R.id.image);
-
+        Log.d("소시시시",social+id);
         http.getProfile(RetrofitExService.url + "/profile/"+social+id+".jpg").enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

@@ -367,7 +367,7 @@ public class Directions_Activity extends AppCompatActivity implements OnMapReady
         try {
             JSONArray walk_path = map_obj.get(index).getJSONArray("subPath");
             for(int j=0;j<walk_path.length();j++){
-                if(walk_path.getJSONObject(j).getInt("trafficType")==3 && walk_path.getJSONObject(j).getInt("distance")>=100) {
+                if(walk_path.getJSONObject(j).getInt("trafficType")==3 && walk_path.getJSONObject(j).getInt("distance")>=50) {
                     double startY,startX,endY,endX;
                     if (j == 0) {
                         startX=start.longitude;

@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pc.ing1_.Menu.Main.Store_recommend_Activity;
 import com.example.pc.ing1_.R;
 import com.example.pc.ing1_.RetrofitExService;
 import com.example.pc.ing1_.aaa.MainActivity;
@@ -64,7 +65,7 @@ public class Schedule_Activity extends AppCompatActivity {
         sf = getSharedPreferences("login",MODE_PRIVATE);
         phone=sf.getString("phone","");
         http = new Retrofit.Builder().baseUrl(RetrofitExService.url).addConverterFactory(GsonConverterFactory.create()).build().create(RetrofitExService.class);
-        HashMap<String,String> data=new HashMap<>();
+        final HashMap<String,String> data=new HashMap<>();
         data.put("day",day);
         data.put("phone",sf.getString("phone",""));
         http.schedule_list(data).enqueue(new Callback<ArrayList<Food_info2>>() {
@@ -245,6 +246,11 @@ public class Schedule_Activity extends AppCompatActivity {
                                 {
                                     Toast.makeText(getApplicationContext(),
                                             items[which], Toast.LENGTH_LONG).show();
+                                    Intent intent1=new Intent(getApplicationContext(),Store_recommend_Activity.class);
+                                    intent1.putExtra("day",day);
+                                    intent1.putExtra("phone",phone);
+                                    intent1.putExtra("select",items[which]);
+                                    startActivity(intent1);
                                 }
                             })
                             .show();

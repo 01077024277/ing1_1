@@ -59,7 +59,7 @@ public class Search_Activity extends AppCompatActivity {
     Recommend_Total_Adapter recommend_total_adapter;
     EditText search;
     Button save;
-    Button category_all,category_1,category_2,category_3,category_4,category_5;
+    Button category_all,category_1,category_2,category_3,category_4,category_5,button;
     SharedPreferences sf;
     String day, value, phone, select;
     double cal, carb, protein, fat;
@@ -559,6 +559,17 @@ public class Search_Activity extends AppCompatActivity {
             }
         });
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Food_input.class);
+                intent.putExtra("value", search.getText().toString());
+                startActivityForResult(intent, 100);
+                searchlist.clear();
+                search.setText("");
+                food_list_adapter.notifyDataSetChanged();
+            }
+        });
 
         init();
     }

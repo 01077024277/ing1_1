@@ -17,9 +17,9 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="내 식단" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_friend"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="채팅" />
     </group>
 
     <item android:title="Communicate">
