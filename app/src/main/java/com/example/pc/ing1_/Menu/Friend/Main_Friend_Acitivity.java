@@ -1,8 +1,8 @@
 package com.example.pc.ing1_.Menu.Friend;
 
 import android.graphics.Color;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;

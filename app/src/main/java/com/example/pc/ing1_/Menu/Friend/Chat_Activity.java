@@ -9,13 +9,13 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,16 +32,14 @@ import com.example.pc.ing1_.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,7 +62,7 @@ public class Chat_Activity extends AppCompatActivity {
     ServiceConnection connection;
     boolean single;
     SharedPreferences sf;
-    int my,other_user;
+    int my,other_user,check;
     RetrofitExService http;
     Button exit;
     @Override
@@ -80,8 +78,10 @@ public class Chat_Activity extends AppCompatActivity {
         single=intent.getBooleanExtra("single",true);
         recyclerView=findViewById(R.id.recyclerView);
         message_models=new ArrayList<>();
+        check=0;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         other_user= Integer.parseInt(intent.getStringExtra("user_no"));
         sf = getSharedPreferences("login",MODE_PRIVATE);
         my= Integer.parseInt(sf.getString("no",""));
@@ -97,6 +97,7 @@ public class Chat_Activity extends AppCompatActivity {
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         user.setBitmap(resource);
                         chat_adapter=new Chat_Adapter(getApplicationContext(),message_models,user);
+//                        chat_adapter.setHasStableIds(true);
                         recyclerView.setAdapter(chat_adapter);
                         Log.d("상대방d",String.valueOf(user.getNo()));
                         HashMap hashMap=new HashMap();
@@ -206,7 +207,7 @@ public class Chat_Activity extends AppCompatActivity {
                     Log.d("보낸시간", df.format(date) + "");
                     message_models.add(ma);
 
-                    chat_adapter.notifyDataSetChanged();
+                    chat_adapter.notifyItemChanged(message_models.size()-1);
                     recyclerView.scrollToPosition(message_models.size() - 1);
                     editText.setText("");
                 }
@@ -229,7 +230,7 @@ Log.d("처음",data);
                         public void run() {
                             message_models.add(mm);
 
-                            chat_adapter.notifyDataSetChanged();
+                            chat_adapter.notifyItemChanged(message_models.size()-1);
                             recyclerView.scrollToPosition(message_models.size()-1);
                         }
                     },0);
@@ -262,6 +263,41 @@ Log.d("처음",data);
         Socket_Service.nnn=other_user;
         Intent serview = new Intent(getApplicationContext(),Socket_Service.class);
         bindService(serview,connection,Context.BIND_AUTO_CREATE);
+        if(check==1) {
+
+
+            HashMap hashMap = new HashMap();
+            hashMap.put("no", my + "");
+            hashMap.put("other", other_user + "");
+            http.chat_list(hashMap).enqueue(new Callback<ArrayList<Message_model>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Message_model>> call, Response<ArrayList<Message_model>> response) {
+                    ArrayList<Message_model> message_model = response.body();
+                    for (int i = 0; i < message_model.size(); i++) {
+                        for (int j = 0; j < message_models.size(); j++) {
+                            if (message_model.get(i).getTime().equals(message_models.get(j).getTime())) {
+                                break;
+                            }
+                            if (j == message_models.size() - 1) {
+                                message_models.add(message_model.get(i));
+                                break;
+                            }
+                        }
+
+                    }
+
+                    chat_adapter.notifyDataSetChanged();
+
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Message_model>> call, Throwable t) {
+
+                }
+            });
+
+
+        }
     }
 
     @Override
@@ -269,7 +305,7 @@ Log.d("처음",data);
         super.onPause();
         Socket_Service.nnn=-1;
         unbindService(connection);
-
+        check=1;
 
     }
 }

@@ -5,6 +5,7 @@ import com.example.pc.ing1_.Menu.Friend.Message_model;
 import com.example.pc.ing1_.Menu.Friend.Room_Item;
 import com.example.pc.ing1_.Menu.Friend.Socket_Service;
 import com.example.pc.ing1_.Menu.Friend.multi_chat.Multi_Room_Item;
+import com.example.pc.ing1_.Menu.Main.Shared_item_class;
 import com.example.pc.ing1_.Menu.Menu.Food_Item;
 import com.example.pc.ing1_.Menu.Menu.Food_info;
 import com.example.pc.ing1_.Menu.Menu.Food_info2;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Handler;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -143,6 +145,9 @@ public interface RetrofitExService {
     @GET("/schedule_cal.php")
     Call<ResponseBody> schedule_cal(@QueryMap HashMap<String,String> a);
 
+    @GET("/schedule_cal2.php")
+    Call<ResponseBody> schedule_cal2(@QueryMap HashMap<String,String> a);
+
 
 
 
@@ -213,5 +218,18 @@ public interface RetrofitExService {
     //멀티 채팅 나가기
     @GET("mul_exit.php")
     Call<ResponseBody> mul_exit(@QueryMap HashMap<String,String> hashMap );
+    //피드백 업로드
+    @Multipart
+    @POST("fead.php")
+    Call<ResponseBody> fead_upload(@Part ArrayList<MultipartBody.Part> image, @PartMap HashMap<String,RequestBody> info);
+
+
+    //공유하기 채팅방 목록
+    @GET("shared.php")
+    Call<ArrayList<Shared_item_class>> shared(@QueryMap HashMap<String,String> no);
+
+    //채팅방 음식점 정보
+    @GET("shared_stroe.php")
+    Call<Store>  shared_store(@Query("no") String no);
 }
 

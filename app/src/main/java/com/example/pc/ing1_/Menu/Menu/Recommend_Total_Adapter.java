@@ -1,13 +1,11 @@
 package com.example.pc.ing1_.Menu.Menu;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.textclassifier.TextClassification;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.pc.ing1_.R;

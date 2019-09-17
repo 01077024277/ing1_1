@@ -2,13 +2,9 @@ package com.example.pc.ing1_.Login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -17,13 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pc.ing1_.Main_Activity;
 import com.example.pc.ing1_.R;
 import com.example.pc.ing1_.RetrofitExService;
 import com.example.pc.ing1_.Sign.Sign_1_agree_Activity;
-import com.example.pc.ing1_.Sign.Sign_2_sms_Activity;
-import com.example.pc.ing1_.Sign.Sign_3_id_Activity;
-import com.example.pc.ing1_.Sign.Sign_4_profile;
 import com.example.pc.ing1_.User;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -37,13 +29,9 @@ import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

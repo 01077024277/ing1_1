@@ -1,29 +1,5 @@
 package com.example.pc.ing1_.Menu.Menu;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.GridView;
-import android.widget.ListAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.pc.ing1_.R;
-
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-
 //public class Menu_Activity extends AppCompatActivity{
 //    ExGridView gridView;
 //    Calendar calendar,calendar_today;

@@ -13,11 +13,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -46,7 +46,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.TimeZone;
 
 import okhttp3.ResponseBody;
@@ -532,7 +531,7 @@ public class Multi_Chat_Activity extends AppCompatActivity {
                         df.setTimeZone(tz);
                         message_models.add(new Message_model(my, edit.getText().toString(), "", df.format(date), ""));
                         Log.d("메세지no", my + "");
-                        multi_char_adapter.notifyDataSetChanged();
+                        multi_char_adapter.notifyItemChanged(message_models.size()-1);
                         recyclerView.scrollToPosition(message_models.size() - 1);
 
                         edit.setText("");
@@ -627,7 +626,7 @@ public class Multi_Chat_Activity extends AppCompatActivity {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                multi_char_adapter.notifyDataSetChanged();
+                                multi_char_adapter.notifyItemChanged(message_models.size()-1);
                                 recyclerView.scrollToPosition(message_models.size() - 1);
 
                             }

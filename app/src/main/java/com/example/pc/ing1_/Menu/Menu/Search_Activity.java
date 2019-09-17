@@ -8,13 +8,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -271,7 +270,7 @@ public class Search_Activity extends AppCompatActivity {
         Log.d("제이슨",phone);
         select = intent.getStringExtra("select");
         recommend = (intent.getIntExtra("recommend", 99));
-        foodDataBase = new FoodDataBase(getApplicationContext(), "food", null, 14);
+        foodDataBase = new FoodDataBase(getApplicationContext(), "food", null, 15);
         db = foodDataBase.getWritableDatabase();
         save = findViewById(R.id.save);
 

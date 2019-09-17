@@ -1,23 +1,17 @@
 package com.example.pc.ing1_.Menu.Friend.multi_chat;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pc.ing1_.Menu.Friend.Chat_Activity;
-import com.example.pc.ing1_.Menu.Friend.Chat_Adapter;
 import com.example.pc.ing1_.R;
 import com.example.pc.ing1_.RetrofitExService;
 import com.example.pc.ing1_.User;

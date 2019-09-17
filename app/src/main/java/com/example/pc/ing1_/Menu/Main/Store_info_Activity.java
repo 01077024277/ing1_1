@@ -7,10 +7,10 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -350,7 +350,12 @@ public class Store_info_Activity extends AppCompatActivity {
         friend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                SharedPreferences sf;
+                sf=getSharedPreferences("login",MODE_PRIVATE);
+                Intent intent1=new Intent(getApplicationContext(),Shared_Lisat_Activity.class);
+                intent1.putExtra("user_no",sf.getString("no",""));
+                intent1.putExtra("store_no",store.getNo()+"");
+                startActivity(intent1);
             }
         });
 

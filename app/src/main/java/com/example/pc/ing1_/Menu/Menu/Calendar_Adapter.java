@@ -2,8 +2,6 @@ package com.example.pc.ing1_.Menu.Menu;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.pc.ing1_.R;
 
@@ -115,19 +112,24 @@ public class Calendar_Adapter extends BaseAdapter {
             }else {
                 if(hashMap.get(arrayList.get(position).getFomat())!=null){
                     imageView.setVisibility(View.GONE);
-//                    carb.setVisibility(View.VISIBLE);
-//                    carb_info.setVisibility(View.VISIBLE);
-//                    protein.setVisibility(View.VISIBLE);
-//                    protein_info.setVisibility(View.VISIBLE);
-//                    fat.setVisibility(View.VISIBLE);
-//                    fat_info.setVisibility(View.VISIBLE);
-//                    cal.setVisibility(View.VISIBLE);
-//                    cal_info.setVisibility(View.VISIBLE);
-//                    String value = hashMap.get(arrayList.get(position).getFomat());
-//                    cal_info.setText(" "+(int)(Double.parseDouble(value.split(" ")[0].toString()))+"kcal");
-//                    carb_info.setText(" "+(int)(Double.parseDouble(value.split(" ")[1].toString()))+"g");
-//                    protein_info.setText(" "+(int)(Double.parseDouble(value.split(" ")[2]))+"g");
-//                    fat_info.setText(" "+(int)(Double.parseDouble(value.split(" ")[3]))+"g");
+                    carb.setVisibility(View.VISIBLE);
+                    carb_info.setVisibility(View.VISIBLE);
+                    protein.setVisibility(View.VISIBLE);
+                    protein_info.setVisibility(View.VISIBLE);
+                    fat.setVisibility(View.VISIBLE);
+                    fat_info.setVisibility(View.VISIBLE);
+                    cal.setVisibility(View.VISIBLE);
+                    cal_info.setVisibility(View.VISIBLE);
+                    String value = hashMap.get(arrayList.get(position).getFomat());
+                    carb_info.setTextColor(Color.parseColor("#00ff99"));
+                    fat_info.setTextColor(Color.parseColor("#ff9900"));
+                    protein_info.setTextColor(Color.parseColor("#ff0099"));
+                    cal_info.setTextColor(Color.parseColor("#00b3ff"));
+                    cal_info.setText(" "+(int)(Double.parseDouble(value.split(" ")[0].toString()))+" %");
+                    carb_info.setText(" "+(int)(Double.parseDouble(value.split(" ")[1].toString()))+" %");
+                    protein_info.setText(" "+(int)(Double.parseDouble(value.split(" ")[2]))+" %");
+                    fat_info.setText(" "+(int)(Double.parseDouble(value.split(" ")[3]))+" %");
+
 
                 }else{
                     imageView.setVisibility(View.VISIBLE);

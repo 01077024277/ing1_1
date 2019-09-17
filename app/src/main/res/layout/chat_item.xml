@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/con"
@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:layout_marginBottom="20dp"
-    android:minHeight="80dp">
+    >
 
     <TextView
         android:id="@+id/sys_message"
@@ -61,12 +61,49 @@
         android:background="#95b6a4"
         android:maxWidth="200dp"
         android:paddingLeft="20dp"
+        android:visibility="gone"
         android:paddingTop="10dp"
         android:paddingRight="20dp"
         android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/profile"
         app:layout_constraintTop_toBottomOf="@+id/nick" />
+
+    <ImageView
+        android:id="@+id/other_shared"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#95b6a4"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profile"
+        app:layout_constraintTop_toBottomOf="@+id/nick" />
+
+    <TextView
+        android:id="@+id/other_shared_text"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="#95b6a4"
+        android:textSize="25dp"
+        android:gravity="center_horizontal"
+        android:paddingBottom="10dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/profile"
+        app:layout_constraintTop_toBottomOf="@+id/other_shared" />
+
+    <TextView
+        android:id="@+id/other_shared_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/other_shared_text"
+        app:layout_constraintStart_toEndOf="@id/other_shared_text" />
 
     <TextView
         android:id="@+id/other_time"
@@ -75,6 +112,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:text=""
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/other_message"
         app:layout_constraintStart_toEndOf="@+id/other_message" />
 
@@ -86,6 +124,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="8dp"
+        android:visibility="gone"
         android:background="#a3f1a3"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
@@ -94,8 +133,50 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <ImageView
+        android:id="@+id/my_shared"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginEnd="30dp"
+        android:background="#a3f1a3"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/my_shared_text"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/my_shared_text"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="8dp"
+        android:background="#a3f1a3"
+        android:gravity="center_horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <TextView
+        android:id="@+id/my_shared_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/my_shared_text"
+        app:layout_constraintEnd_toStartOf="@+id/my_shared_text" />
+
     <TextView
         android:id="@+id/my_time"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -103,4 +184,4 @@
         android:text=""
         app:layout_constraintBottom_toBottomOf="@+id/my_message"
         app:layout_constraintEnd_toStartOf="@+id/my_message" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,8 +2,8 @@ package com.example.pc.ing1_.Menu.Menu;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -11,13 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.pc.ing1_.Menu.Main.Reivew_Adapter;
 import com.example.pc.ing1_.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Food_List_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

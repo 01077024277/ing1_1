@@ -8,6 +8,7 @@ public class Message_model {
     String sys_message;
     int nno;
 
+
     public Message_model(int no, String message, String image, String time, String sys_message, int nno) {
         this.no = no;
         this.message = message;

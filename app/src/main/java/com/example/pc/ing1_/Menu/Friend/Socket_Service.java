@@ -1,6 +1,5 @@
 package com.example.pc.ing1_.Menu.Friend;
 
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,14 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
-import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -24,7 +22,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.pc.ing1_.Menu.Friend.multi_chat.Multi_Chat_Activity;
 import com.example.pc.ing1_.R;
-import com.example.pc.ing1_.aaa.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

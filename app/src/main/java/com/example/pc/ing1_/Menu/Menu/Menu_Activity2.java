@@ -3,8 +3,8 @@ package com.example.pc.ing1_.Menu.Menu;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.pc.ing1_.R;
 import com.example.pc.ing1_.RetrofitExService;
@@ -64,7 +63,7 @@ public class Menu_Activity2 extends AppCompatActivity {
         http = new Retrofit.Builder().baseUrl(RetrofitExService.url).addConverterFactory(GsonConverterFactory.create()).build().create(RetrofitExService.class);
 
         sf = getSharedPreferences("login", MODE_PRIVATE);
-        foodDataBase = new FoodDataBase(getApplicationContext(), "food", null, 14);
+        foodDataBase = new FoodDataBase(getApplicationContext(), "food", null, 15);
         database = foodDataBase.getWritableDatabase();
 
 
@@ -121,9 +120,50 @@ public class Menu_Activity2 extends AppCompatActivity {
                 if(result.split(" ")[5].equals("0")){
                     all_hashMap.put(result.split(" ")[0],null);
                 }else{
-                    all_hashMap.put(result.split(" ")[0],result.split(" ")[1]+" "+result.split(" ")[2]+" "+result.split(" ")[3]+" "+result.split(" ")[4]);
+//                    all_hashMap.put(result.split(" ")[0],result.split(" ")[1]+" "+result.split(" ")[2]+" "+result.split(" ")[3]+" "+result.split(" ")[4]);
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put("day", result.split(" ")[0]);
+                    hashMap.put("no", sf.getString("no", ""));
+                    http.schedule_cal2(hashMap).enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+
+                            try {
+                                String total = response.body().string();
+
+
+//                    Log.d("이게뭐지",""+ccal);
+                                try {
+                                    total = total.split("/")[4];
+                                }catch (ArrayIndexOutOfBoundsException e){
+                                    total="";
+                                }
+
+                                if (!total.equals("")) {
+                                    for (int i = 0; i < total.split("\n").length; i++) {
+                                        String day = total.split("\n")[i].split(" ")[0];
+                                        all_hashMap.put(day, total.split("\n")[i].split(day + " ")[1]);
+                                        Log.d("해쉬맵", all_hashMap.get(day));
+                                    }
+                                    mCalendarAdapter.notifyDataSetChanged();
+
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                        }
+                    });
+
                 }
-                mCalendarAdapter.notifyDataSetChanged();
 
             }
         }
